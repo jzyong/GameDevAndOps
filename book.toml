@@ -1,6 +1,24 @@
 [book]
-authors = ["jzyong"]
+authors = ["蒋志勇"]
 language = "cn"
 multilingual = false
 src = "src"
+description = "游戏服务器架构、游戏服务器运维、游戏开发工具、游戏AI、NavMesh、A*、MMO、Slots" # A description for the book, which is added as meta information in the html <head> of each page
 title = "网络游戏开发运维实操手册"
+
+[build]
+build-dir = "docs"                # the directory where the output is placed
+create-missing = true             # whether or not to create missing pages
+use-default-preprocessors = true  # use the default preprocessors
+
+[output.html]
+git-repository-url = "https://github.com/jzyong/GameDevAndOps"
+
+[output.html.search]
+limit-results = 20
+use-boolean-and = true
+boost-title = 2
+boost-hierarchy = 2
+boost-paragraph = 1
+expand = true
+heading-split-level = 2
