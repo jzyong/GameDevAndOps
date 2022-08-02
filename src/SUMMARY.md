@@ -21,17 +21,33 @@
     - [A*算法](开发篇/寻路系统/A星算法.md)
     - [NavMesh网格](开发篇/寻路系统/NavMesh网格.md)
     - [服务器寻路图形工具](开发篇/寻路系统/服务器寻路图形工具.md)  
-
------------  
-# 工具篇
-- [Excel导表](工具篇/Excel导表.md)
-- [压力测试](工具篇/压力测试.md)
-    - [Http压测](工具篇/压力测试/Http压测.md)
-    - [Tcp压测](工具篇/压力测试/Tcp压测.md)
-- [Java开发工具](工具篇/Java开发工具.md)
-    - [Arthas](工具篇/压力测试/Arthas.md)
+- [Excel导表](开发篇/Excel导表.md)
+- [压力测试](开发篇/压力测试.md)
+    - [Http压测](开发篇/压力测试/Http压测.md)
+    - [Tcp压测](开发篇/压力测试/Tcp压测.md)
+   
   
-
-
 -----------
 # 运维篇
+- [Linux环境](运维篇/Linux环境.md)
+- [开发工具](运维篇/开发工具.md)
+    - [Git](运维篇/开发工具/Git.md)
+    - [Gitlab](运维篇/开发工具/Gitlab.md)
+    - [nexus3](运维篇/开发工具/nexus3.md)
+- [项目部署](运维篇/项目部署.md)
+    - [Docker](运维篇/项目部署/Docker.md)
+    - [Jenkins](运维篇/项目部署/Jenkins.md)
+- [数据库](运维篇/数据库.md)
+    - [MongoDB](运维篇/数据库/MongoDB.md)
+    - [Redis](运维篇/数据库/Redis.md)
+- [监控系统](运维篇/监控系统.md)
+    - [Grafana](运维篇/监控系统/Grafana.md)
+    - [InfluxDB](运维篇/监控系统/InfluxDB.md)
+    - [Skywalking](运维篇/监控系统/Skywalking.md)
+- [日志系统](运维篇/日志系统.md)
+    - [Elasticsearch](运维篇/日志系统/Elasticsearch.md)
+- [诊断工具](运维篇/诊断工具.md)   
+    - [Arthas](运维篇/诊断工具/Arthas.md)
+- [三方组件](运维篇/三方组件.md)
+    - [Nginx](运维篇/三方组件/nginx.md)
+    - [Zookeeper](运维篇/三方组件/Zookeeper.md)
