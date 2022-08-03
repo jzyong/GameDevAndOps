@@ -211,7 +211,82 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="http压测"><a class="header" href="#http压测">Http压测</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tcp压测"><a class="header" href="#tcp压测">Tcp压测</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="linux"><a class="header" href="#linux">Linux</a></h1>
+<p>  本章节主要记录基于CentosOS 7常用指令；
+开发和生产环境中Linux的常用软件安装维护；
+生产环境中网络，防火墙，时间等的环境调优配置。
+三个小节如下：</p>
+<ul>
+<li><a href="%E8%BF%90%E7%BB%B4%E7%AF%87/Linux/CentOS%E5%91%BD%E4%BB%A4%E5%8F%82%E8%80%83.html">CentOS命令参考</a></li>
+<li><a href="%E8%BF%90%E7%BB%B4%E7%AF%87/Linux/CentOS%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85.html">CentOS软件安装</a></li>
+<li><a href="%E8%BF%90%E7%BB%B4%E7%AF%87/Linux/CentOS%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE.html">CentOS环境配置</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="centos命令参考"><a class="header" href="#centos命令参考">CentOS命令参考</a></h1>
+<p>  主要记录常用的系统自带命令使用</p>
+<h2 id="系统资源"><a class="header" href="#系统资源">系统资源</a></h2>
+<p>  磁盘、CPU、内存、IO等常见命令使用。
+游戏服务器程序可能出现死循环占用CPU；未正常释放对象占用过多内存或者内存一直飙升等问题；
+存储数据，网路请求太多，消耗IO过高等问题。</p>
+<h3 id="top命令"><a class="header" href="#top命令">top命令</a></h3>
+<p>https://blog.csdn.net/xujiamin0022016/article/details/89072116</p>
+<ul>
+<li>
+<p>P：以CPU的使用资源排序显示 </p>
+</li>
+<li>
+<p>M：以内存的使用资源排序显示 </p>
+</li>
+<li>
+<p>N：以pid排序显示 </p>
+</li>
+<li>
+<p>T：由进程使用的时间累计排序显示</p>
+<h1 id="1查看指定进程-内存cpu等信息"><a class="header" href="#1查看指定进程-内存cpu等信息">1.查看指定进程 内存，cpu等信息</a></h1>
+<p>top -p 2913</p>
+</li>
+</ul>
+<p>查看内存详细信息：<br />
+https://blog.csdn.net/weixin_40584007/article/details/88847745</p>
+<pre><code>cat /proc/1308/status
+</code></pre>
+<h2 id="文件操作"><a class="header" href="#文件操作">文件操作</a></h2>
+<h3 id="tar解压缩"><a class="header" href="#tar解压缩">tar解压缩</a></h3>
+<pre><code>// 1.打包压缩目录
+tar -czvf kdnn_hall_20201209.tar.gz kdnn_hall_20201209121360/
+</code></pre>
+<h3 id="目录文件操作"><a class="header" href="#目录文件操作">目录文件操作</a></h3>
+<pre><code>// 1.删除backups目录30天之前修改的文件
+find backups/ -mtime +30 -delete
+</code></pre>
+<h3 id="系统日志命令"><a class="header" href="#系统日志命令">系统日志命令</a></h3>
+<p>/var/log/message 系统启动后的信息和错误日志，是Red Hat Linux中最常用的日志之一<br />
+/var/log/secure 与安全相关的日志信息<br />
+/var/log/maillog 与邮件相关的日志信息<br />
+/var/log/cron 与定时任务相关的日志信息<br />
+/var/log/spooler 与UUCP和news设备相关的日志信息<br />
+/var/log/boot.log 守护进程启动和停止相关的日志消息</p>
+<pre><code># 显示所有日志：
+journalctl
+
+#查看启动只有的所有日志：
+journalctl -b
+
+#查看最后10条日志
+journalctl -n 10
+
+#跟踪日志：
+journalctl -f
+
+只显示冲突、告警和错误：journalctl -p err..alert
+</code></pre>
+<h2 id="其他"><a class="header" href="#其他">其他</a></h2>
+<h3 id="时间修正"><a class="header" href="#时间修正">时间修正</a></h3>
+<pre><code># 正式服因为时区问题，经常跑块，时间修正命令：  
+date -s '2022-02-11 04:15:30'
+</code></pre>
+<h3 id="批量关闭进程"><a class="header" href="#批量关闭进程">批量关闭进程</a></h3>
+<pre><code># 1.查询进程id
+ps -ef | grep slots-game | awk '{print &quot;kill &quot;$2}'
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="centos软件安装"><a class="header" href="#centos软件安装">CentOS软件安装</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="centos环境配置"><a class="header" href="#centos环境配置">CentOS环境配置</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="开发工具"><a class="header" href="#开发工具">开发工具</a></h1>
@@ -233,6 +308,22 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="诊断工具"><a class="header" href="#诊断工具">诊断工具</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="arthas"><a class="header" href="#arthas">Arthas</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="wireshark"><a class="header" href="#wireshark">WireShark</a></h1>
+<h3 id="8-wireshark使用"><a class="header" href="#8-wireshark使用">8 .wireshark使用</a></h3>
+<p>使用wireshark 网络包分析 </p>
+<pre><code># 1.创建文件&amp;添加权限
+touch packet.txt
+chmod o+x packet.txt
+
+# 2.查看网络接口
+tshark -D
+
+# 3.记录
+tshark -w packet.txt -i eth0 -q
+
+# 4.控制台查看指定端口(非常消耗内存)
+tshark -i eth0 -Y &quot;tcp.port == 40019&quot;
+tshark -i ens5 -Y &quot;tcp.port == 7050&quot;
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="三方组件"><a class="header" href="#三方组件">三方组件</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="zookeeper"><a class="header" href="#zookeeper">Zookeeper</a></h1>

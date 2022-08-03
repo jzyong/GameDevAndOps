@@ -138,6 +138,22 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="wireshark"><a class="header" href="#wireshark">WireShark</a></h1>
+<h3 id="8-wireshark使用"><a class="header" href="#8-wireshark使用">8 .wireshark使用</a></h3>
+<p>使用wireshark 网络包分析 </p>
+<pre><code># 1.创建文件&amp;添加权限
+touch packet.txt
+chmod o+x packet.txt
+
+# 2.查看网络接口
+tshark -D
+
+# 3.记录
+tshark -w packet.txt -i eth0 -q
+
+# 4.控制台查看指定端口(非常消耗内存)
+tshark -i eth0 -Y &quot;tcp.port == 40019&quot;
+tshark -i ens5 -Y &quot;tcp.port == 7050&quot;
+</code></pre>
 
                     </main>
 
