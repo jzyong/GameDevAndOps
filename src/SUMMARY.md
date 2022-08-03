@@ -29,11 +29,14 @@
   
 -----------
 # 运维篇
-- [Linux环境](运维篇/Linux环境.md)
+- [Linux](运维篇/Linux.md)
+     - [CentOS命令参考](运维篇/Linux/CentOS命令参考.md)
+     - [CentOS软件安装](运维篇/Linux/CentOS软件安装.md)
+     - [CentOS环境配置](运维篇/Linux/CentOS环境配置.md)
 - [开发工具](运维篇/开发工具.md)
     - [Git](运维篇/开发工具/Git.md)
     - [Gitlab](运维篇/开发工具/Gitlab.md)
-    - [nexus3](运维篇/开发工具/nexus3.md)
+    - [Nexus](运维篇/开发工具/Nexus.md)
 - [项目部署](运维篇/项目部署.md)
     - [Docker](运维篇/项目部署/Docker.md)
     - [Jenkins](运维篇/项目部署/Jenkins.md)
@@ -48,6 +51,7 @@
     - [Elasticsearch](运维篇/日志系统/Elasticsearch.md)
 - [诊断工具](运维篇/诊断工具.md)   
     - [Arthas](运维篇/诊断工具/Arthas.md)
+    - [WireShark](运维篇/诊断工具/WireShark.md)
 - [三方组件](运维篇/三方组件.md)
-    - [Nginx](运维篇/三方组件/nginx.md)
+    - [Nginx](运维篇/三方组件/Nginx.md)
     - [Zookeeper](运维篇/三方组件/Zookeeper.md)
