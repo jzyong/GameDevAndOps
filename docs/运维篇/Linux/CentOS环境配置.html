@@ -138,6 +138,171 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="centos环境配置"><a class="header" href="#centos环境配置">CentOS环境配置</a></h1>
+<h2 id="环境配置"><a class="header" href="#环境配置">环境配置</a></h2>
+<h3 id="1-防火墙端口"><a class="header" href="#1-防火墙端口">1. 防火墙&amp;端口</a></h3>
+<p>https://www.cnblogs.com/heqiuyong/p/10460150.html</p>
+<pre><code># 1.查看防火墙所有开放的端口
+firewall-cmd --zone=public --list-ports
+firewall-cmd --list-all
+
+# 2.开放端口
+firewall-cmd --zone=public --add-port=27017/tcp --permanent
+
+# 3.生效
+firewall-cmd --reload
+
+# 4.防火墙开关，状态查看
+systemctl stop firewalld
+systemctl start firewalld
+systemctl status firewalld
+
+
+# 5.网络、端口状态
+    # 查看端口
+    netstat -lnpt
+    
+    # 查看指定端口
+    netstat -lnpt |grep 5672
+    
+    # 网络状态统计信息
+    netstat -an | awk '/^tcp/ {++y[$NF]} END {for(w in y) print w, y[w]}'
+    
+    # 连接数
+    netstat -an |grep ESTABLISHED |wc -l
+    
+    # 每个ip连接数
+    netstat -nat|grep &quot;tcp&quot;|awk ' {print$5}'|awk -F : '{print$1}'|sort|uniq -c|sort -rn
+    
+    # 每个ip ESTABLISHED连接数
+    netstat -nat|grep ESTABLISHED|awk '{print$5}'|awk -F : '{print$1}'|sort|uniq -c|sort -rn
+    
+    # 查看指定端口的连接信息
+    netstat -an | grep 7050
+</code></pre>
+<h3 id="3-网络设置"><a class="header" href="#3-网络设置">3. 网络设置</a></h3>
+<ul>
+<li>
+<p>ulimit -n
+参考文档： https://blog.csdn.net/hunhun1122/article/details/79391147</p>
+<h1 id="1修改连接数重启后生效"><a class="header" href="#1修改连接数重启后生效">1.修改连接数，重启后生效</a></h1>
+<p>vim /etc/security/limits.conf
+* soft nofile 204800
+* hard nofile 204800
+* soft nproc 204800
+* hard nproc 204800</p>
+<h1 id="2分别新建下面两个文件并加入-如下内容"><a class="header" href="#2分别新建下面两个文件并加入-如下内容">2.分别新建下面两个文件，并加入 如下内容</a></h1>
+<p>vim /etc/security/limits.d/90-nproc.conf 
+* soft nproc 204800<br />
+* hard nproc 204800<br />
+vim /etc/security/limits.d/def.conf
+* soft nofile 204800<br />
+* hard nofile 204800</p>
+<h1 id="3临时设置连接数"><a class="header" href="#3临时设置连接数">3.临时设置连接数</a></h1>
+<p>ulimit -n 204800</p>
+</li>
+<li>
+<p>net.core.somaxconn<br />
+参考文档： https://www.cnblogs.com/my-show-time/p/15206020.html</p>
+<h1 id="1查看参数"><a class="header" href="#1查看参数">1.查看参数</a></h1>
+<p>sysctl -a | grep net.core.somaxconn</p>
+<h1 id="2设置-在末尾添加"><a class="header" href="#2设置-在末尾添加">2.设置 ，在末尾添加</a></h1>
+<p>vim /etc/sysctl.conf
+net.core.somaxconn=32768
+sysctl -p</p>
+<h1 id="3查看"><a class="header" href="#3查看">3.查看</a></h1>
+<p>sysctl -a | grep net.core.somaxconn</p>
+</li>
+<li>
+<p>网络超时设置</p>
+</li>
+</ul>
+<p>参考文档： https://segmentfault.com/a/119000
+https://docs.mongodb.com/v3.6/faq/diagnostics/#adjusting-the-tcp-keepalive-value<br />
+具体配置参考：<a href="%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0/sysctl.conf">sysctl.conf</a></p>
+<pre><code># 1.使网络超时设置10分钟，超时后检测3次，每次30秒
+vim /etc/sysctl.conf
+    net.ipv4.tcp_keepalive_time=600
+    net.ipv4.tcp_keepalive_intvl=30
+    net.ipv4.tcp_keepalive_probes=3
+sysctl -p
+sysctl -a | grep keepalive
+</code></pre>
+<ul>
+<li>常用网络设置
+参考文档：https://help.aliyun.com/document_detail/41334.html</li>
+</ul>
+<h3 id="4日期时间设置"><a class="header" href="#4日期时间设置">4.日期时间设置</a></h3>
+<p>参考文档：https://www.cnblogs.com/lei0213/p/8723106.html<br />
+正式服使用美国纽约时间，默认情况下centos服务器运行一段时间会跑块</p>
+<pre><code># 1.查看系统时间
+timedatectl status
+date
+
+# 2.查看可用时区
+timedatectl list-timezones
+
+# 3.设置时区
+timedatectl set-timezone America/New_York
+
+# 4.设置时间同步
+timedatectl set-ntp yes
+
+# 5.设置硬件时钟为UTC时间
+timedatectl set-local-rtc 0
+
+# 6.设置系统读取GST时区，美国纽约涉及到夏时令，会存在时间调快和调慢1小时问题
+vi /etc/profile
+    export TZ='GST+5'
+source /etc/profile
+</code></pre>
+<h3 id="5主机名称设置"><a class="header" href="#5主机名称设置">5.主机名称设置</a></h3>
+<pre><code># 1.查看主机名
+uname -n
+
+# 2.修改主机名
+hostnamectl set-hostname cd-linux-34
+hostnamectl set-hostname audit
+</code></pre>
+<h3 id="6主机登录提示设置"><a class="header" href="#6主机登录提示设置">6.主机登录提示设置</a></h3>
+<pre><code># 1.登录linux提示主机功能
+echo &quot;阿里云外网测试服、jenkins、gitlab、docker仓库、maven仓库....&quot; &gt;/etc/motd
+echo &quot;亚马逊正式服大厅1、网关1、manage1、gate1、MongoDB、redis、zookeeper&quot; &gt;/etc/motd
+echo &quot;亚马逊正式服大厅2、网关2、manage2、gate2&quot; &gt;/etc/motd
+echo &quot;亚马逊正式服子游戏slots、influxdb、elasticsearch、kibana&quot; &gt;/etc/motd
+echo &quot;亚马逊正式服子游戏slots-2&quot; &gt;/etc/motd
+echo &quot;亚马逊提审服，部署了所有相关服务、外侧服登录服api&quot; &gt;/etc/motd
+</code></pre>
+<h3 id="7磁盘挂载"><a class="header" href="#7磁盘挂载">7.磁盘挂载</a></h3>
+<h4 id="1成都34-jenkins-挂载到单独目录"><a class="header" href="#1成都34-jenkins-挂载到单独目录">1.成都34 jenkins 挂载到单独目录</a></h4>
+<pre><code># 1.查看磁盘
+df -kh
+fdisk -l
+
+# 2.创建挂载目录
+cd /mnt/
+mkdir jenkins
+
+# 3.挂载，及开机自动挂载
+mount /dev/vdb1 /mnt/jenkins/
+echo '/dev/vdb1 /mnt/jenkins ext4 defaults 0 0' &gt;&gt; /etc/fstab
+
+# 4.关闭jenkins 移动目录到新位置
+mv /var/lib/jenkins/ /mnt/jenkins/
+
+# 5.创建软连接，重启jenkins
+ln -s /mnt/jenkins/jenkins /var/lib
+service jenkins start
+</code></pre>
+<h3 id="8用户创建及权限设置"><a class="header" href="#8用户创建及权限设置">8.用户创建及权限设置</a></h3>
+<p>参考文档：https://blog.51cto.com/u_14557673/2446952</p>
+<pre><code># 1.创建账号
+useradd -M develop
+
+# 2.修改密码
+passwd develop
+    123456
+    123456
+</code></pre>
 
                     </main>
 

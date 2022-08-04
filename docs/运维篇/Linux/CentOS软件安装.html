@@ -138,6 +138,91 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="centos软件安装"><a class="header" href="#centos软件安装">CentOS软件安装</a></h1>
+<h2 id="一程序安装"><a class="header" href="#一程序安装">一、程序安装</a></h2>
+<h3 id="2-jdk安装"><a class="header" href="#2-jdk安装">2. JDK安装</a></h3>
+<ul>
+<li>
+<p>JDK8：
+https://www.cnblogs.com/wandoupeas/p/centos_jdk_install.html</p>
+</li>
+<li>
+<p>JDK11：
+https://www.cnblogs.com/biem/p/13307438.html</p>
+</li>
+<li>
+<p>JDK14：
+上传安装包到 /data/java</p>
+<p>//安装jdk14
+tar -xzvf jdk-14.0.2_linux-x64_bin.tar.gz</p>
+</li>
+</ul>
+<h3 id="4git安装"><a class="header" href="#4git安装">4.git安装</a></h3>
+<p>https://www.cnblogs.com/jhxxb/p/10571227.html</p>
+<h3 id="7-dstat命令安装"><a class="header" href="#7-dstat命令安装">7. dstat命令安装</a></h3>
+<p>https://www.cnblogs.com/shoufeng/p/9739805.html</p>
+<h3 id="8-iostat安装及使用"><a class="header" href="#8-iostat安装及使用">8. iostat安装及使用</a></h3>
+<p>https://www.cnblogs.com/architectforest/p/12628399.html</p>
+<pre><code>iostat -xmt 1
+Key fields from iostat:
+%util: this is the most useful field for a quick check, it indicates what percent of the time the device/drive is in use.
+avgrq-sz: average request size. Smaller number for this value reflect more random IO operations.
+</code></pre>
+<h3 id="10-nginx安装"><a class="header" href="#10-nginx安装">10. Nginx安装</a></h3>
+<p>安装参考：http://nginx.org/en/linux_packages.html
+配置路径：<code>/etc/nginx/</code>
+<a href="nginx/aws/%E6%AD%A3%E5%BC%8F%E6%9C%8Dnginx%E9%85%8D%E7%BD%AE.html">正式服配置</a></p>
+<pre><code>//安装前置软件
+sudo yum install yum-utils
+
+vim /etc/yum.repos.d/nginx.repo
+
+[nginx-stable]
+name=nginx stable repo
+baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=1
+enabled=1
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+
+[nginx-mainline]
+name=nginx mainline repo
+baseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+
+# 安装
+sudo yum install nginx
+
+# 退出
+nginx -s quit
+service nginx stop
+# 启动
+nginx
+service nginx start
+# 重载配置
+nginx -s reload
+sudo systemctl reload nginx
+# 重启
+nginx -c /etc/nginx/nginx.conf
+</code></pre>
+<h3 id="12-zookeeper-安装"><a class="header" href="#12-zookeeper-安装">12. zookeeper 安装</a></h3>
+<p>安装参考：https://www.cnblogs.com/zhiyouwu/p/11546097.html</p>
+<h3 id="13-vim安装"><a class="header" href="#13-vim安装">13. vim安装</a></h3>
+<pre><code>yum -y install vim*
+</code></pre>
+<h3 id="14-tree安装"><a class="header" href="#14-tree安装">14. tree安装</a></h3>
+<pre><code>yum install tree -y
+tree /data/game
+</code></pre>
+<h3 id="15-lsof安装"><a class="header" href="#15-lsof安装">15. lsof安装</a></h3>
+<pre><code>yum install lsof
+</code></pre>
+<h3 id="16-wireshark"><a class="header" href="#16-wireshark">16. wireshark</a></h3>
+<p>参考文档：https://www.wireshark.org/docs/wsug_html_chunked/ChBuildInstallUnixInstallBins.html</p>
+<pre><code>yum install wireshark wireshark-qt
+</code></pre>
 
                     </main>
 

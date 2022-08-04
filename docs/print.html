@@ -221,74 +221,342 @@
 <li><a href="%E8%BF%90%E7%BB%B4%E7%AF%87/Linux/CentOS%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE.html">CentOS环境配置</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="centos命令参考"><a class="header" href="#centos命令参考">CentOS命令参考</a></h1>
-<p>  主要记录常用的系统自带命令使用</p>
+<p>  主要记录常用的系统命令使用及CentOS7中的安装使用。</p>
 <h2 id="系统资源"><a class="header" href="#系统资源">系统资源</a></h2>
 <p>  磁盘、CPU、内存、IO等常见命令使用。
-游戏服务器程序可能出现死循环占用CPU；未正常释放对象占用过多内存或者内存一直飙升等问题；
-存储数据，网路请求太多，消耗IO过高等问题。</p>
+游戏服务器程序可能出现死循环，定时器泄露等占用CPU；未正常释放对象占用过多的内存或者内存一直飙升等问题；
+存储数据，网路请求太多，消耗IO过高等问题；日志输出太多，没有正常删除照成磁盘占满等问题。</p>
 <h3 id="top命令"><a class="header" href="#top命令">top命令</a></h3>
-<p>https://blog.csdn.net/xujiamin0022016/article/details/89072116</p>
+<p>  top命令经常用来监控linux的系统状况，常用的性能分析工具，能够实时显示系统中各个进程的各种资源占用情况。
+<a href="https://blog.csdn.net/yjclsx/article/details/81508455">参考地址</a> ：<a href="https://blog.csdn.net/yjclsx/article/details/81508455">https://blog.csdn.net/yjclsx/article/details/81508455</a>。进入top界面安如下安静可安需求显示。</p>
 <ul>
-<li>
-<p>P：以CPU的使用资源排序显示 </p>
-</li>
-<li>
-<p>M：以内存的使用资源排序显示 </p>
-</li>
-<li>
-<p>N：以pid排序显示 </p>
-</li>
-<li>
-<p>T：由进程使用的时间累计排序显示</p>
-<h1 id="1查看指定进程-内存cpu等信息"><a class="header" href="#1查看指定进程-内存cpu等信息">1.查看指定进程 内存，cpu等信息</a></h1>
-<p>top -p 2913</p>
-</li>
+<li>1：展开每个CPU的信息</li>
+<li>P：以CPU的使用资源排序显示 </li>
+<li>M：以内存的使用资源排序显示 </li>
+<li>N：以pid排序显示 </li>
+<li>T：由进程使用的时间累计排序显示</li>
 </ul>
-<p>查看内存详细信息：<br />
-https://blog.csdn.net/weixin_40584007/article/details/88847745</p>
-<pre><code>cat /proc/1308/status
+<pre><code class="language-shell script"># 1.查看指定进程 内存，cpu等信息
+top -p 2913
+
+# 2.查看进程详细信息，具体条目说明参考 https://blog.csdn.net/weixin_40584007/article/details/88847745  
+cat /proc/1308/status
+</code></pre>
+<h3 id="ps命令"><a class="header" href="#ps命令">ps命令</a></h3>
+<p>  查看具体进程相关信。</p>
+<pre><code class="language-shell script"># 1.查询进程id
+ps -ef | grep game-hall | awk '{print &quot;kill &quot;$2}'
 </code></pre>
 <h2 id="文件操作"><a class="header" href="#文件操作">文件操作</a></h2>
+<p>  常用地文件上传，下载，打包，日志查看操作等。</p>
+<h3 id="resz上传下载命令"><a class="header" href="#resz上传下载命令">re|sz上传下载命令</a></h3>
+<p>  可在Xshell中快速上传，下载文件。</p>
+<pre><code class="language-shell script"># 1.安装
+yum -y install lrzsz
+
+# 2.上传
+rz
+
+# 3.下载
+sz [文件名]
+</code></pre>
 <h3 id="tar解压缩"><a class="header" href="#tar解压缩">tar解压缩</a></h3>
-<pre><code>// 1.打包压缩目录
-tar -czvf kdnn_hall_20201209.tar.gz kdnn_hall_20201209121360/
+<pre><code class="language-shell script"># 1.打包压缩目录
+tar -czvf game_hall_20201209.tar.gz game_hall_20201209121360/
 </code></pre>
 <h3 id="目录文件操作"><a class="header" href="#目录文件操作">目录文件操作</a></h3>
-<pre><code>// 1.删除backups目录30天之前修改的文件
+<pre><code class="language-shell script"># 1.删除backups目录30天之前修改的文件
 find backups/ -mtime +30 -delete
 </code></pre>
 <h3 id="系统日志命令"><a class="header" href="#系统日志命令">系统日志命令</a></h3>
-<p>/var/log/message 系统启动后的信息和错误日志，是Red Hat Linux中最常用的日志之一<br />
-/var/log/secure 与安全相关的日志信息<br />
-/var/log/maillog 与邮件相关的日志信息<br />
-/var/log/cron 与定时任务相关的日志信息<br />
-/var/log/spooler 与UUCP和news设备相关的日志信息<br />
-/var/log/boot.log 守护进程启动和停止相关的日志消息</p>
-<pre><code># 显示所有日志：
+<p>  系统日志文件含义：</p>
+<ul>
+<li><code>/var/log/message</code> 系统启动后的信息和错误日志，是Red Hat Linux中最常用的日志之一</li>
+<li><code>/var/log/secure</code> 与安全相关的日志信息</li>
+<li><code>/var/log/maillog</code> 与邮件相关的日志信息</li>
+<li><code>/var/log/cron</code> 与定时任务相关的日志信息</li>
+<li><code>/var/log/spooler</code> 与UUCP和news设备相关的日志信息</li>
+<li><code>/var/log/boot.log</code> 守护进程启动和停止相关的日志消息</li>
+</ul>
+<pre><code class="language-shell script"># 1.显示所有日志：
 journalctl
 
-#查看启动只有的所有日志：
-journalctl -b
-
-#查看最后10条日志
+# 2.查看最后10条日志
 journalctl -n 10
 
-#跟踪日志：
+# 3.跟踪日志：
 journalctl -f
 
-只显示冲突、告警和错误：journalctl -p err..alert
+# 4只显示冲突、告警和错误
+journalctl -p err..alert
 </code></pre>
-<h2 id="其他"><a class="header" href="#其他">其他</a></h2>
-<h3 id="时间修正"><a class="header" href="#时间修正">时间修正</a></h3>
-<pre><code># 正式服因为时区问题，经常跑块，时间修正命令：  
-date -s '2022-02-11 04:15:30'
+<h2 id="网络操作"><a class="header" href="#网络操作">网络操作</a></h2>
+<h3 id="5-telnet安装"><a class="header" href="#5-telnet安装">5. Telnet安装</a></h3>
+<pre><code>https://www.cnblogs.com/sjpv/p/11812238.html
+    
+    rpm -qa | grep telnet
+    yum list | grep telnet
+    yum install -y telnet-server.x86_64
+    yum install -y telnet.x86_64
 </code></pre>
-<h3 id="批量关闭进程"><a class="header" href="#批量关闭进程">批量关闭进程</a></h3>
-<pre><code># 1.查询进程id
-ps -ef | grep slots-game | awk '{print &quot;kill &quot;$2}'
+<h3 id="9-wget命令安装"><a class="header" href="#9-wget命令安装">9. wget命令安装</a></h3>
+<pre><code>yum -y install wget
+</code></pre>
+<h3 id="11-crul安装"><a class="header" href="#11-crul安装">11. crul安装</a></h3>
+<pre><code>yum -y install curl
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="centos软件安装"><a class="header" href="#centos软件安装">CentOS软件安装</a></h1>
+<h2 id="一程序安装"><a class="header" href="#一程序安装">一、程序安装</a></h2>
+<h3 id="2-jdk安装"><a class="header" href="#2-jdk安装">2. JDK安装</a></h3>
+<ul>
+<li>
+<p>JDK8：
+https://www.cnblogs.com/wandoupeas/p/centos_jdk_install.html</p>
+</li>
+<li>
+<p>JDK11：
+https://www.cnblogs.com/biem/p/13307438.html</p>
+</li>
+<li>
+<p>JDK14：
+上传安装包到 /data/java</p>
+<p>//安装jdk14
+tar -xzvf jdk-14.0.2_linux-x64_bin.tar.gz</p>
+</li>
+</ul>
+<h3 id="4git安装"><a class="header" href="#4git安装">4.git安装</a></h3>
+<p>https://www.cnblogs.com/jhxxb/p/10571227.html</p>
+<h3 id="7-dstat命令安装"><a class="header" href="#7-dstat命令安装">7. dstat命令安装</a></h3>
+<p>https://www.cnblogs.com/shoufeng/p/9739805.html</p>
+<h3 id="8-iostat安装及使用"><a class="header" href="#8-iostat安装及使用">8. iostat安装及使用</a></h3>
+<p>https://www.cnblogs.com/architectforest/p/12628399.html</p>
+<pre><code>iostat -xmt 1
+Key fields from iostat:
+%util: this is the most useful field for a quick check, it indicates what percent of the time the device/drive is in use.
+avgrq-sz: average request size. Smaller number for this value reflect more random IO operations.
+</code></pre>
+<h3 id="10-nginx安装"><a class="header" href="#10-nginx安装">10. Nginx安装</a></h3>
+<p>安装参考：http://nginx.org/en/linux_packages.html
+配置路径：<code>/etc/nginx/</code>
+<a href="%E8%BF%90%E7%BB%B4%E7%AF%87/Linux/nginx/aws/%E6%AD%A3%E5%BC%8F%E6%9C%8Dnginx%E9%85%8D%E7%BD%AE.html">正式服配置</a></p>
+<pre><code>//安装前置软件
+sudo yum install yum-utils
+
+vim /etc/yum.repos.d/nginx.repo
+
+[nginx-stable]
+name=nginx stable repo
+baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=1
+enabled=1
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+
+[nginx-mainline]
+name=nginx mainline repo
+baseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+
+# 安装
+sudo yum install nginx
+
+# 退出
+nginx -s quit
+service nginx stop
+# 启动
+nginx
+service nginx start
+# 重载配置
+nginx -s reload
+sudo systemctl reload nginx
+# 重启
+nginx -c /etc/nginx/nginx.conf
+</code></pre>
+<h3 id="12-zookeeper-安装"><a class="header" href="#12-zookeeper-安装">12. zookeeper 安装</a></h3>
+<p>安装参考：https://www.cnblogs.com/zhiyouwu/p/11546097.html</p>
+<h3 id="13-vim安装"><a class="header" href="#13-vim安装">13. vim安装</a></h3>
+<pre><code>yum -y install vim*
+</code></pre>
+<h3 id="14-tree安装"><a class="header" href="#14-tree安装">14. tree安装</a></h3>
+<pre><code>yum install tree -y
+tree /data/game
+</code></pre>
+<h3 id="15-lsof安装"><a class="header" href="#15-lsof安装">15. lsof安装</a></h3>
+<pre><code>yum install lsof
+</code></pre>
+<h3 id="16-wireshark"><a class="header" href="#16-wireshark">16. wireshark</a></h3>
+<p>参考文档：https://www.wireshark.org/docs/wsug_html_chunked/ChBuildInstallUnixInstallBins.html</p>
+<pre><code>yum install wireshark wireshark-qt
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="centos环境配置"><a class="header" href="#centos环境配置">CentOS环境配置</a></h1>
+<h2 id="环境配置"><a class="header" href="#环境配置">环境配置</a></h2>
+<h3 id="1-防火墙端口"><a class="header" href="#1-防火墙端口">1. 防火墙&amp;端口</a></h3>
+<p>https://www.cnblogs.com/heqiuyong/p/10460150.html</p>
+<pre><code># 1.查看防火墙所有开放的端口
+firewall-cmd --zone=public --list-ports
+firewall-cmd --list-all
+
+# 2.开放端口
+firewall-cmd --zone=public --add-port=27017/tcp --permanent
+
+# 3.生效
+firewall-cmd --reload
+
+# 4.防火墙开关，状态查看
+systemctl stop firewalld
+systemctl start firewalld
+systemctl status firewalld
+
+
+# 5.网络、端口状态
+    # 查看端口
+    netstat -lnpt
+    
+    # 查看指定端口
+    netstat -lnpt |grep 5672
+    
+    # 网络状态统计信息
+    netstat -an | awk '/^tcp/ {++y[$NF]} END {for(w in y) print w, y[w]}'
+    
+    # 连接数
+    netstat -an |grep ESTABLISHED |wc -l
+    
+    # 每个ip连接数
+    netstat -nat|grep &quot;tcp&quot;|awk ' {print$5}'|awk -F : '{print$1}'|sort|uniq -c|sort -rn
+    
+    # 每个ip ESTABLISHED连接数
+    netstat -nat|grep ESTABLISHED|awk '{print$5}'|awk -F : '{print$1}'|sort|uniq -c|sort -rn
+    
+    # 查看指定端口的连接信息
+    netstat -an | grep 7050
+</code></pre>
+<h3 id="3-网络设置"><a class="header" href="#3-网络设置">3. 网络设置</a></h3>
+<ul>
+<li>
+<p>ulimit -n
+参考文档： https://blog.csdn.net/hunhun1122/article/details/79391147</p>
+<h1 id="1修改连接数重启后生效"><a class="header" href="#1修改连接数重启后生效">1.修改连接数，重启后生效</a></h1>
+<p>vim /etc/security/limits.conf
+* soft nofile 204800
+* hard nofile 204800
+* soft nproc 204800
+* hard nproc 204800</p>
+<h1 id="2分别新建下面两个文件并加入-如下内容"><a class="header" href="#2分别新建下面两个文件并加入-如下内容">2.分别新建下面两个文件，并加入 如下内容</a></h1>
+<p>vim /etc/security/limits.d/90-nproc.conf 
+* soft nproc 204800<br />
+* hard nproc 204800<br />
+vim /etc/security/limits.d/def.conf
+* soft nofile 204800<br />
+* hard nofile 204800</p>
+<h1 id="3临时设置连接数"><a class="header" href="#3临时设置连接数">3.临时设置连接数</a></h1>
+<p>ulimit -n 204800</p>
+</li>
+<li>
+<p>net.core.somaxconn<br />
+参考文档： https://www.cnblogs.com/my-show-time/p/15206020.html</p>
+<h1 id="1查看参数"><a class="header" href="#1查看参数">1.查看参数</a></h1>
+<p>sysctl -a | grep net.core.somaxconn</p>
+<h1 id="2设置-在末尾添加"><a class="header" href="#2设置-在末尾添加">2.设置 ，在末尾添加</a></h1>
+<p>vim /etc/sysctl.conf
+net.core.somaxconn=32768
+sysctl -p</p>
+<h1 id="3查看"><a class="header" href="#3查看">3.查看</a></h1>
+<p>sysctl -a | grep net.core.somaxconn</p>
+</li>
+<li>
+<p>网络超时设置</p>
+</li>
+</ul>
+<p>参考文档： https://segmentfault.com/a/119000
+https://docs.mongodb.com/v3.6/faq/diagnostics/#adjusting-the-tcp-keepalive-value<br />
+具体配置参考：<a href="%E8%BF%90%E7%BB%B4%E7%AF%87/Linux/%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0/sysctl.conf">sysctl.conf</a></p>
+<pre><code># 1.使网络超时设置10分钟，超时后检测3次，每次30秒
+vim /etc/sysctl.conf
+    net.ipv4.tcp_keepalive_time=600
+    net.ipv4.tcp_keepalive_intvl=30
+    net.ipv4.tcp_keepalive_probes=3
+sysctl -p
+sysctl -a | grep keepalive
+</code></pre>
+<ul>
+<li>常用网络设置
+参考文档：https://help.aliyun.com/document_detail/41334.html</li>
+</ul>
+<h3 id="4日期时间设置"><a class="header" href="#4日期时间设置">4.日期时间设置</a></h3>
+<p>参考文档：https://www.cnblogs.com/lei0213/p/8723106.html<br />
+正式服使用美国纽约时间，默认情况下centos服务器运行一段时间会跑块</p>
+<pre><code># 1.查看系统时间
+timedatectl status
+date
+
+# 2.查看可用时区
+timedatectl list-timezones
+
+# 3.设置时区
+timedatectl set-timezone America/New_York
+
+# 4.设置时间同步
+timedatectl set-ntp yes
+
+# 5.设置硬件时钟为UTC时间
+timedatectl set-local-rtc 0
+
+# 6.设置系统读取GST时区，美国纽约涉及到夏时令，会存在时间调快和调慢1小时问题
+vi /etc/profile
+    export TZ='GST+5'
+source /etc/profile
+</code></pre>
+<h3 id="5主机名称设置"><a class="header" href="#5主机名称设置">5.主机名称设置</a></h3>
+<pre><code># 1.查看主机名
+uname -n
+
+# 2.修改主机名
+hostnamectl set-hostname cd-linux-34
+hostnamectl set-hostname audit
+</code></pre>
+<h3 id="6主机登录提示设置"><a class="header" href="#6主机登录提示设置">6.主机登录提示设置</a></h3>
+<pre><code># 1.登录linux提示主机功能
+echo &quot;阿里云外网测试服、jenkins、gitlab、docker仓库、maven仓库....&quot; &gt;/etc/motd
+echo &quot;亚马逊正式服大厅1、网关1、manage1、gate1、MongoDB、redis、zookeeper&quot; &gt;/etc/motd
+echo &quot;亚马逊正式服大厅2、网关2、manage2、gate2&quot; &gt;/etc/motd
+echo &quot;亚马逊正式服子游戏slots、influxdb、elasticsearch、kibana&quot; &gt;/etc/motd
+echo &quot;亚马逊正式服子游戏slots-2&quot; &gt;/etc/motd
+echo &quot;亚马逊提审服，部署了所有相关服务、外侧服登录服api&quot; &gt;/etc/motd
+</code></pre>
+<h3 id="7磁盘挂载"><a class="header" href="#7磁盘挂载">7.磁盘挂载</a></h3>
+<h4 id="1成都34-jenkins-挂载到单独目录"><a class="header" href="#1成都34-jenkins-挂载到单独目录">1.成都34 jenkins 挂载到单独目录</a></h4>
+<pre><code># 1.查看磁盘
+df -kh
+fdisk -l
+
+# 2.创建挂载目录
+cd /mnt/
+mkdir jenkins
+
+# 3.挂载，及开机自动挂载
+mount /dev/vdb1 /mnt/jenkins/
+echo '/dev/vdb1 /mnt/jenkins ext4 defaults 0 0' &gt;&gt; /etc/fstab
+
+# 4.关闭jenkins 移动目录到新位置
+mv /var/lib/jenkins/ /mnt/jenkins/
+
+# 5.创建软连接，重启jenkins
+ln -s /mnt/jenkins/jenkins /var/lib
+service jenkins start
+</code></pre>
+<h3 id="8用户创建及权限设置"><a class="header" href="#8用户创建及权限设置">8.用户创建及权限设置</a></h3>
+<p>参考文档：https://blog.51cto.com/u_14557673/2446952</p>
+<pre><code># 1.创建账号
+useradd -M develop
+
+# 2.修改密码
+passwd develop
+    123456
+    123456
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="开发工具"><a class="header" href="#开发工具">开发工具</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="git"><a class="header" href="#git">Git</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gitlab"><a class="header" href="#gitlab">Gitlab</a></h1>

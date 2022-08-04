@@ -138,71 +138,89 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="centos命令参考"><a class="header" href="#centos命令参考">CentOS命令参考</a></h1>
-<p>  主要记录常用的系统自带命令使用</p>
+<p>  主要记录常用的系统命令使用及CentOS7中的安装使用。</p>
 <h2 id="系统资源"><a class="header" href="#系统资源">系统资源</a></h2>
 <p>  磁盘、CPU、内存、IO等常见命令使用。
-游戏服务器程序可能出现死循环占用CPU；未正常释放对象占用过多内存或者内存一直飙升等问题；
-存储数据，网路请求太多，消耗IO过高等问题。</p>
+游戏服务器程序可能出现死循环，定时器泄露等占用CPU；未正常释放对象占用过多的内存或者内存一直飙升等问题；
+存储数据，网路请求太多，消耗IO过高等问题；日志输出太多，没有正常删除照成磁盘占满等问题。</p>
 <h3 id="top命令"><a class="header" href="#top命令">top命令</a></h3>
-<p>https://blog.csdn.net/xujiamin0022016/article/details/89072116</p>
+<p>  top命令经常用来监控linux的系统状况，常用的性能分析工具，能够实时显示系统中各个进程的各种资源占用情况。
+<a href="https://blog.csdn.net/yjclsx/article/details/81508455">参考地址</a> ：<a href="https://blog.csdn.net/yjclsx/article/details/81508455">https://blog.csdn.net/yjclsx/article/details/81508455</a>。进入top界面安如下安静可安需求显示。</p>
 <ul>
-<li>
-<p>P：以CPU的使用资源排序显示 </p>
-</li>
-<li>
-<p>M：以内存的使用资源排序显示 </p>
-</li>
-<li>
-<p>N：以pid排序显示 </p>
-</li>
-<li>
-<p>T：由进程使用的时间累计排序显示</p>
-<h1 id="1查看指定进程-内存cpu等信息"><a class="header" href="#1查看指定进程-内存cpu等信息">1.查看指定进程 内存，cpu等信息</a></h1>
-<p>top -p 2913</p>
-</li>
+<li>1：展开每个CPU的信息</li>
+<li>P：以CPU的使用资源排序显示 </li>
+<li>M：以内存的使用资源排序显示 </li>
+<li>N：以pid排序显示 </li>
+<li>T：由进程使用的时间累计排序显示</li>
 </ul>
-<p>查看内存详细信息：<br />
-https://blog.csdn.net/weixin_40584007/article/details/88847745</p>
-<pre><code>cat /proc/1308/status
+<pre><code class="language-shell script"># 1.查看指定进程 内存，cpu等信息
+top -p 2913
+
+# 2.查看进程详细信息，具体条目说明参考 https://blog.csdn.net/weixin_40584007/article/details/88847745  
+cat /proc/1308/status
+</code></pre>
+<h3 id="ps命令"><a class="header" href="#ps命令">ps命令</a></h3>
+<p>  查看具体进程相关信。</p>
+<pre><code class="language-shell script"># 1.查询进程id
+ps -ef | grep game-hall | awk '{print &quot;kill &quot;$2}'
 </code></pre>
 <h2 id="文件操作"><a class="header" href="#文件操作">文件操作</a></h2>
+<p>  常用地文件上传，下载，打包，日志查看操作等。</p>
+<h3 id="resz上传下载命令"><a class="header" href="#resz上传下载命令">re|sz上传下载命令</a></h3>
+<p>  可在Xshell中快速上传，下载文件。</p>
+<pre><code class="language-shell script"># 1.安装
+yum -y install lrzsz
+
+# 2.上传
+rz
+
+# 3.下载
+sz [文件名]
+</code></pre>
 <h3 id="tar解压缩"><a class="header" href="#tar解压缩">tar解压缩</a></h3>
-<pre><code>// 1.打包压缩目录
-tar -czvf kdnn_hall_20201209.tar.gz kdnn_hall_20201209121360/
+<pre><code class="language-shell script"># 1.打包压缩目录
+tar -czvf game_hall_20201209.tar.gz game_hall_20201209121360/
 </code></pre>
 <h3 id="目录文件操作"><a class="header" href="#目录文件操作">目录文件操作</a></h3>
-<pre><code>// 1.删除backups目录30天之前修改的文件
+<pre><code class="language-shell script"># 1.删除backups目录30天之前修改的文件
 find backups/ -mtime +30 -delete
 </code></pre>
 <h3 id="系统日志命令"><a class="header" href="#系统日志命令">系统日志命令</a></h3>
-<p>/var/log/message 系统启动后的信息和错误日志，是Red Hat Linux中最常用的日志之一<br />
-/var/log/secure 与安全相关的日志信息<br />
-/var/log/maillog 与邮件相关的日志信息<br />
-/var/log/cron 与定时任务相关的日志信息<br />
-/var/log/spooler 与UUCP和news设备相关的日志信息<br />
-/var/log/boot.log 守护进程启动和停止相关的日志消息</p>
-<pre><code># 显示所有日志：
+<p>  系统日志文件含义：</p>
+<ul>
+<li><code>/var/log/message</code> 系统启动后的信息和错误日志，是Red Hat Linux中最常用的日志之一</li>
+<li><code>/var/log/secure</code> 与安全相关的日志信息</li>
+<li><code>/var/log/maillog</code> 与邮件相关的日志信息</li>
+<li><code>/var/log/cron</code> 与定时任务相关的日志信息</li>
+<li><code>/var/log/spooler</code> 与UUCP和news设备相关的日志信息</li>
+<li><code>/var/log/boot.log</code> 守护进程启动和停止相关的日志消息</li>
+</ul>
+<pre><code class="language-shell script"># 1.显示所有日志：
 journalctl
 
-#查看启动只有的所有日志：
-journalctl -b
-
-#查看最后10条日志
+# 2.查看最后10条日志
 journalctl -n 10
 
-#跟踪日志：
+# 3.跟踪日志：
 journalctl -f
 
-只显示冲突、告警和错误：journalctl -p err..alert
+# 4只显示冲突、告警和错误
+journalctl -p err..alert
 </code></pre>
-<h2 id="其他"><a class="header" href="#其他">其他</a></h2>
-<h3 id="时间修正"><a class="header" href="#时间修正">时间修正</a></h3>
-<pre><code># 正式服因为时区问题，经常跑块，时间修正命令：  
-date -s '2022-02-11 04:15:30'
+<h2 id="网络操作"><a class="header" href="#网络操作">网络操作</a></h2>
+<h3 id="5-telnet安装"><a class="header" href="#5-telnet安装">5. Telnet安装</a></h3>
+<pre><code>https://www.cnblogs.com/sjpv/p/11812238.html
+    
+    rpm -qa | grep telnet
+    yum list | grep telnet
+    yum install -y telnet-server.x86_64
+    yum install -y telnet.x86_64
 </code></pre>
-<h3 id="批量关闭进程"><a class="header" href="#批量关闭进程">批量关闭进程</a></h3>
-<pre><code># 1.查询进程id
-ps -ef | grep slots-game | awk '{print &quot;kill &quot;$2}'
+<h3 id="9-wget命令安装"><a class="header" href="#9-wget命令安装">9. wget命令安装</a></h3>
+<pre><code>yum -y install wget
+</code></pre>
+<h3 id="11-crul安装"><a class="header" href="#11-crul安装">11. crul安装</a></h3>
+<pre><code>yum -y install curl
 </code></pre>
 
                     </main>
