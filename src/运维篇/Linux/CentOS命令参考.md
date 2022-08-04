@@ -32,7 +32,7 @@ ps -ef | grep game-hall | awk '{print "kill "$2}'
    
    
 ## 文件操作
-&emsp;&emsp;常用地文件上传，下载，打包，日志查看操作等。
+&emsp;&emsp;常用地文件上传，下载，打包，日志查看操作等。游戏服务器出现bug，有时候为了方便查看日志，需要将大的日志文件进行压缩打包，然后下载到本地进行操作。
 ### re|sz上传下载命令
 &emsp;&emsp;可在Xshell中快速上传，下载文件。    
 ```shell script
@@ -84,6 +84,10 @@ journalctl -p err..alert
 
   
 ## 网络操作
+&emsp;&emsp;新服务器部署过程中需要查看两台服务器直接网络是否联通需要用`ping`命令；
+检测网络端口是否开放，能否访问通需要使用`telent`命令；
+在主机上下载安装包通常需要`wget`命令；
+经常需要调用http请求进行后台管理操作需要使用`curl`命令。
 
 ### 5. Telnet安装
     
@@ -99,7 +103,7 @@ journalctl -p err..alert
     yum -y install wget
     
     
-### 11. crul安装
+### 11. curl安装
     yum -y install curl
 
 

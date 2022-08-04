@@ -165,7 +165,7 @@ cat /proc/1308/status
 ps -ef | grep game-hall | awk '{print &quot;kill &quot;$2}'
 </code></pre>
 <h2 id="文件操作"><a class="header" href="#文件操作">文件操作</a></h2>
-<p>  常用地文件上传，下载，打包，日志查看操作等。</p>
+<p>  常用地文件上传，下载，打包，日志查看操作等。游戏服务器出现bug，有时候为了方便查看日志，需要将大的日志文件进行压缩打包，然后下载到本地进行操作。</p>
 <h3 id="resz上传下载命令"><a class="header" href="#resz上传下载命令">re|sz上传下载命令</a></h3>
 <p>  可在Xshell中快速上传，下载文件。</p>
 <pre><code class="language-shell script"># 1.安装
@@ -208,6 +208,10 @@ journalctl -f
 journalctl -p err..alert
 </code></pre>
 <h2 id="网络操作"><a class="header" href="#网络操作">网络操作</a></h2>
+<p>  新服务器部署过程中需要查看两台服务器直接网络是否联通需要用<code>ping</code>命令；
+检测网络端口是否开放，能否访问通需要使用<code>telent</code>命令；
+在主机上下载安装包通常需要<code>wget</code>命令；
+经常需要调用http请求进行后台管理操作需要使用<code>curl</code>命令。</p>
 <h3 id="5-telnet安装"><a class="header" href="#5-telnet安装">5. Telnet安装</a></h3>
 <pre><code>https://www.cnblogs.com/sjpv/p/11812238.html
     
@@ -219,7 +223,7 @@ journalctl -p err..alert
 <h3 id="9-wget命令安装"><a class="header" href="#9-wget命令安装">9. wget命令安装</a></h3>
 <pre><code>yum -y install wget
 </code></pre>
-<h3 id="11-crul安装"><a class="header" href="#11-crul安装">11. crul安装</a></h3>
+<h3 id="11-curl安装"><a class="header" href="#11-curl安装">11. curl安装</a></h3>
 <pre><code>yum -y install curl
 </code></pre>
 
