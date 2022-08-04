@@ -1,6 +1,7 @@
 # CentOS命令参考
 &emsp;&emsp;主要记录常用的系统命令使用及CentOS7中的安装使用。
 
+
 ## 系统资源
 &emsp;&emsp;磁盘、CPU、内存、IO等常见命令使用。
 游戏服务器程序可能出现死循环，定时器泄露等占用CPU；未正常释放对象占用过多的内存或者内存一直飙升等问题；
@@ -23,6 +24,27 @@ top -p 2913
 # 2.查看进程详细信息，具体条目说明参考 https://blog.csdn.net/weixin_40584007/article/details/88847745  
 cat /proc/1308/status
 ```
+
+[1]:https://blog.csdn.net/yjclsx/article/details/81508455
+
+### dstat命令
+&emsp;&emsp;多功能系统资源统计生成工具 ( versatile tool for generating system resource statistics), 
+可提供包含 `top、free、iostat、ifstat、vmstat`等多个工具的功能。详细使用可参考:<https://www.cnblogs.com/shoufeng/p/9739805.html>
+```shell script
+# 1.安装
+yum -y install dstat
+
+# 2.查看
+dstat
+```
+
+### iostat
+&emsp;&emsp;统计CPU和IO信息，详细使用可参考：<https://www.cnblogs.com/architectforest/p/12628399.html>
+```shell script
+# 1.查看
+iostat -xmt 1
+```
+
 ### ps命令
 &emsp;&emsp;查看具体进程相关信。
 ```shell script
@@ -59,7 +81,7 @@ tar -czvf game_hall_20201209.tar.gz game_hall_20201209121360/
 find backups/ -mtime +30 -delete
 ```
     
-### 系统日志命令
+### 系统日志
 &emsp;&emsp;系统日志文件含义：
 * `/var/log/message` 系统启动后的信息和错误日志，是Red Hat Linux中最常用的日志之一  
 * `/var/log/secure` 与安全相关的日志信息  
@@ -89,22 +111,138 @@ journalctl -p err..alert
 在主机上下载安装包通常需要`wget`命令；
 经常需要调用http请求进行后台管理操作需要使用`curl`命令。
 
-### 5. Telnet安装
+### Telnet
     
-    https://www.cnblogs.com/sjpv/p/11812238.html
-        
-        rpm -qa | grep telnet
-        yum list | grep telnet
-        yum install -y telnet-server.x86_64
-        yum install -y telnet.x86_64
+```shell script
+# 1.检查是否安装
+rpm -qa | grep telnet
+
+# 2.查看yum列表
+yum list | grep telnet
+
+# 3.安装
+yum install -y telnet-server.x86_64
+yum install -y telnet.x86_64
+
+# 4.执行
+telnet 192.168.1.11 80
+```      
    
-### 9. wget命令安装
+### wget
+```shell script
+# 1.安装
+yum -y install wget
+```
+    
+### curl
+```shell script
+# 1.安装
+yum -y install curl
+```
 
-    yum -y install wget
+### 16. wireshark 
+&emsp;&emsp;监听服务器、客户端指定端口是否收到远端的消息包。用于网络消息包的分析。官方文档：<https://www.wireshark.org/docs/wsug_html_chunked/index.html>
+
+```shell script
+# 1.安装
+yum install wireshark wireshark-qt
+
+# 2.服务器获取网络包
+# 2.1.创建文件&添加权限
+touch packet.txt
+chmod o+x packet.txt
+
+# 2.2.查看网络接口
+tshark -D
+
+# 2.3.记录
+tshark -w packet.txt -i eth0 -q
+
+# 2.4.控制台查看指定端口(非常消耗内存)
+tshark -i eth0 -Y "tcp.port == 4019"
+tshark -i ens5 -Y "tcp.port == 7050"
+```
+   
+### firewall-cmd
+
+```shell script
+# 1.查看防火墙所有开放的端口
+firewall-cmd --zone=public --list-ports
+firewall-cmd --list-all
+  
+# 2.开放端口
+firewall-cmd --zone=public --add-port=27017/tcp --permanent
+
+# 3.生效
+firewall-cmd --reload
+
+# 4.防火墙开关，状态查看
+systemctl stop firewalld
+systemctl start firewalld
+systemctl status firewalld
+```
+
+### netstat    
+&emsp;&emsp;压测时可使用该命令查看网络连接是否正常创建，释放。
+```shell script
+
+# 1.查看端口
+netstat -lnpt
+ 
+# 2.查看指定端口
+netstat -lnpt |grep 5672
+
+# 3.网络状态统计信息
+netstat -an | awk '/^tcp/ {++y[$NF]} END {for(w in y) print w, y[w]}'
+
+# 4.连接数
+netstat -an |grep ESTABLISHED |wc -l
+
+# 5.每个ip连接数
+netstat -nat|grep "tcp"|awk ' {print$5}'|awk -F : '{print$1}'|sort|uniq -c|sort -rn
+
+# 6.每个ip ESTABLISHED连接数
+netstat -nat|grep ESTABLISHED|awk '{print$5}'|awk -F : '{print$1}'|sort|uniq -c|sort -rn
+
+# 7.查看指定端口的连接信息
+netstat -an | grep 7050
+```   
+    
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
     
     
-### 11. curl安装
-    yum -y install curl
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
 
 
-[1]:https://blog.csdn.net/yjclsx/article/details/81508455
+
+
