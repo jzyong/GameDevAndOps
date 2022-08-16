@@ -12,14 +12,7 @@
 [1]: https://www.cnblogs.com/wandoupeas/p/centos_jdk_install.html
 [2]: https://www.cnblogs.com/biem/p/13307438.html
 
-### Git安装
-```shell script
-# 1.安装
-yum install -y git
 
-# 2.查看版本
-git version
-```
   
 ### vim安装
 ```shell script

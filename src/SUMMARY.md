@@ -36,6 +36,7 @@
 - [开发工具](运维篇/开发工具.md)
     - [Git](运维篇/开发工具/Git.md)
     - [Gitlab](运维篇/开发工具/Gitlab.md)
+    - [Maven](运维篇/开发工具/Maven.md)
     - [Nexus](运维篇/开发工具/Nexus.md)
 - [项目部署](运维篇/项目部署.md)
     - [Docker](运维篇/项目部署/Docker.md)
