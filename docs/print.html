@@ -625,9 +625,81 @@ sudo gitlab-ctl reconfigure
 # 2.重新迁移数据库
 sudo gitlab-rake db:migrate
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="maven"><a class="header" href="#maven">Maven</a></h1>
+<h3 id="maven安装"><a class="header" href="#maven安装">Maven安装</a></h3>
+<p>参考文档：<a href="https://blog.csdn.net/djrm11/article/details/106340433">https://blog.csdn.net/djrm11/article/details/106340433</a><br />
+setting配置 <a href="%E8%BF%90%E7%BB%B4%E7%AF%87/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/settings.xml">setting.xml</a></p>
+<pre><code class="language-shell script"># 1.官网下注包上传到 data目录
+tar -xzvf apache-maven-3.6.3-bin.tar.gz
+  
+# 2.设置环境变量，在profile末尾添加
+vi /etc/profile
+    MAVEN_HOME=/data/apache-maven-3.6.3
+    export PATH=${MAVEN_HOME}/bin:${PATH}
+source /etc/profile
+
+# 3.设置jdk版本
+cd /data/apache-maven-3.6.3/bin
+vim mvn
+    JAVA_HOME=/data/java/jdk-14.0.2
+    
+# 4.修改setting配置
+</code></pre>
+<h2 id="二nexus3-安装"><a class="header" href="#二nexus3-安装">二、nexus3 安装</a></h2>
+<p>参考：https://hub.docker.com/r/sonatype/nexus3/#notes</p>
+<pre><code># 1.创建挂载目录
+mkdir /data/nexus-data
+
+# 2.运行镜像
+docker run -d -p 40016:8081 --name nexus -v /data/nexus-data:/nexus-data sonatype/nexus3
+</code></pre>
+<h2 id="三常见问题"><a class="header" href="#三常见问题">三、常见问题</a></h2>
+<ul>
+<li>私有仓库上传snapshot jar包，项目检出snapshot jar类文件找不到问题
+参考文档：https://segmentfault.com/a/1190000022068814</li>
+</ul>
+<ol>
+<li>
+<p>配置pom.xml 拉取最新jar包</p>
+<pre><code>&lt;repositories&gt;
+     &lt;repository&gt;
+         &lt;id&gt;public&lt;/id&gt;
+         &lt;url&gt;http://47.108.13.34:40016/repository/maven-public/&lt;/url&gt;
+         &lt;snapshots&gt;
+             &lt;!-- 始终下载最新的 snapshot 包 ，因为协议消息在其他项目，时刻改变 --&gt;
+             &lt;updatePolicy&gt;always&lt;/updatePolicy&gt;
+         &lt;/snapshots&gt;
+     &lt;/repository&gt;
+ &lt;/repositories&gt;
+</code></pre>
+</li>
+<li>
+<p>jar 包运行，pom.xml设置项目打包插件</p>
+<plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-jar-plugin</artifactId>
+      <version>3.2.0</version>
+      <configuration>
+          <archive>
+              <manifest>
+                  <addClasspath>true</addClasspath>
+                  <classpathPrefix>lib/</classpathPrefix>
+                  <mainClass>com.dls.slots.gate.GateApp</mainClass>
+                  <!--配置可使用快照版本-->
+                  <useUniqueVersions>false</useUniqueVersions>
+              </manifest>
+          </archive>
+      </configuration>
+  </plugin>
+</li>
+</ol>
+<ul>
+<li>maven setting.xml 镜像配置错误导致拉取不到存在的jar包问题
+参考文档： https://segmentfault.com/q/1010000019941502/a-1020000019941560</li>
+</ul>
+<p>mirrorOf 最开始配置问<code>central</code>，导致上传到snapshot库中的jar包无法下载，改为<code>*</code>问题解决</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="nexus"><a class="header" href="#nexus">Nexus</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="nexus-1"><a class="header" href="#nexus-1">Nexus</a></h1>
-<p>Nexus 搭建公司内部maven私有仓库，便于公司内部包的版本管理，加速获取公共包</p>
+<p>Nexus 搭建公司内部maven私有仓库，便于公司内部包的版本管理，加速获取公共包。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="项目部署"><a class="header" href="#项目部署">项目部署</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="docker"><a class="header" href="#docker">Docker</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="jenkins"><a class="header" href="#jenkins">Jenkins</a></h1>
