@@ -138,6 +138,35 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="jenkins"><a class="header" href="#jenkins">Jenkins</a></h1>
+<h3 id="安装"><a class="header" href="#安装">安装</a></h3>
+<p>参考文档：<br />
+<a href="https://pkg.jenkins.io/redhat-stable/">https://pkg.jenkins.io/redhat-stable/</a><br />
+<a href="https://www.jianshu.com/p/368685768680">https://www.jianshu.com/p/368685768680</a></p>
+<pre><code class="language-shell script"># 1.安装
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+yum install jenkins
+# 2.配置启动 
+vi /etc/sysconfig/jenkins
+   JENKINS_PORT=40015
+   JENKINS_JAVA_OPTIONS=&quot;-server -Xms1024m -Xmx2048m -XX:PermSize=256m -XX:MaxPermSize=512m -Djava.awt.headless=true&quot;
+chkconfig jenkins on
+service jenkins start
+</code></pre>
+<ul>
+<li>
+<p>错误处理：AWT is not properly configured on this server
+https://blog.csdn.net/qq_44959735/article/details/104363491</p>
+</li>
+<li>
+<p>mvn 命令无法识别问题<br />
+https://www.jianshu.com/p/993ffb82ee0e</p>
+</li>
+</ul>
+<h3 id="windows-编码设置"><a class="header" href="#windows-编码设置">Windows 编码设置</a></h3>
+<p>  进入 <code>E:\Program Files\Jenkins</code> 在jenkins.xml中设置启动参数 <code> -Dfile.encoding=UTF-8</code></p>
+<p>TODO 结合docker进行流程介绍 </p>
 
                     </main>
 

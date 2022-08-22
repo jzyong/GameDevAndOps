@@ -5,8 +5,14 @@
 # 命令
 使用mdbook 生成，需要安装[mdbook](https://github.com/rust-lang/mdBook)
     
-    # 1.本地浏览器查看
-    mdbook serve --open
-    
-    # 2.清除生成的网页静态文件
-    mdbook clean
+```shell script
+# 1.初始化
+mdbook init
+
+# 2.本地浏览器查看
+mdbook serve --open
+
+# 3.清除生成的网页静态文件
+mdbook clean
+```  
+

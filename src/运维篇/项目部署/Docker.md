@@ -84,29 +84,6 @@ cd /usr/libexec/docker/
 sudo ln -s docker-runc-current docker-runc 
 ```
 
-### Windows环境搭建
-
-TODO
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ### windows docker数据盘设置

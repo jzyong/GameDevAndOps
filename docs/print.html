@@ -205,6 +205,7 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="寻路系统"><a class="header" href="#寻路系统">寻路系统</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="a算法"><a class="header" href="#a算法">A*算法</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="navmesh网格"><a class="header" href="#navmesh网格">NavMesh网格</a></h1>
+<p>TODO 四叉树</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="服务器寻路图形工具"><a class="header" href="#服务器寻路图形工具">服务器寻路图形工具</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="excel导表"><a class="header" href="#excel导表">Excel导表</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="压力测试"><a class="header" href="#压力测试">压力测试</a></h1>
@@ -776,8 +777,6 @@ systemctl status docker.service
 <pre><code class="language-shell script">cd /usr/libexec/docker/
 sudo ln -s docker-runc-current docker-runc 
 </code></pre>
-<h3 id="windows环境搭建"><a class="header" href="#windows环境搭建">Windows环境搭建</a></h3>
-<p>TODO</p>
 <h3 id="windows-docker数据盘设置"><a class="header" href="#windows-docker数据盘设置">windows docker数据盘设置</a></h3>
 <p>  docker 安装默认镜像目录在C盘中，使用一段时间后此文件特别大，然而电脑C盘空间太小，
 因此需要将此文件移动到空间大的磁盘上。<br />
@@ -873,6 +872,35 @@ jps
 jstack 1
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="jenkins"><a class="header" href="#jenkins">Jenkins</a></h1>
+<h3 id="安装-2"><a class="header" href="#安装-2">安装</a></h3>
+<p>参考文档：<br />
+<a href="https://pkg.jenkins.io/redhat-stable/">https://pkg.jenkins.io/redhat-stable/</a><br />
+<a href="https://www.jianshu.com/p/368685768680">https://www.jianshu.com/p/368685768680</a></p>
+<pre><code class="language-shell script"># 1.安装
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+yum install jenkins
+# 2.配置启动 
+vi /etc/sysconfig/jenkins
+   JENKINS_PORT=40015
+   JENKINS_JAVA_OPTIONS=&quot;-server -Xms1024m -Xmx2048m -XX:PermSize=256m -XX:MaxPermSize=512m -Djava.awt.headless=true&quot;
+chkconfig jenkins on
+service jenkins start
+</code></pre>
+<ul>
+<li>
+<p>错误处理：AWT is not properly configured on this server
+https://blog.csdn.net/qq_44959735/article/details/104363491</p>
+</li>
+<li>
+<p>mvn 命令无法识别问题<br />
+https://www.jianshu.com/p/993ffb82ee0e</p>
+</li>
+</ul>
+<h3 id="windows-编码设置"><a class="header" href="#windows-编码设置">Windows 编码设置</a></h3>
+<p>  进入 <code>E:\Program Files\Jenkins</code> 在jenkins.xml中设置启动参数 <code> -Dfile.encoding=UTF-8</code></p>
+<p>TODO 结合docker进行流程介绍 </p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="数据库"><a class="header" href="#数据库">数据库</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mongodb"><a class="header" href="#mongodb">MongoDB</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="redis"><a class="header" href="#redis">Redis</a></h1>
