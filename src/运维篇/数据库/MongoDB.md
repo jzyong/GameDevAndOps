@@ -56,7 +56,7 @@ mongo --host 127.0.0.1:27017
 #### 配置 Disable Transparent Huge Pages (THP)  
 参考文档：<https://docs.mongodb.com/v3.6/tutorial/transparent-huge-pages/>
 
-#### 配置文件[mongod.conf](mongod.conf)  
+#### 配置文件[mongod.conf](Mongo/mongod.conf)  
 参考文档： <https://docs.mongodb.com/v3.6/administration/configuration/>   
 &emsp;&emsp;外网访问和密码验证，文件路径`/etc/mongod.cnf`,添加修改如下内容：
 ```shell script
@@ -81,7 +81,7 @@ security:
 ```
 
 
-#### [每日备份](backup.sh)  
+#### [每日备份](Mongo/backup.sh)  
 参考文档：<https://www.jb51.net/article/135847.htm>
 ```shell script
 # 1.创建存储目录
