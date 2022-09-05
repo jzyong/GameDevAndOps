@@ -14,5 +14,8 @@ mdbook serve --open
 
 # 3.清除生成的网页静态文件
 mdbook clean
+
+# 4.构建
+mdbook build
 ```  
 
