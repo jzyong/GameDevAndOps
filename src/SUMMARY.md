@@ -49,6 +49,7 @@
     - [Grafana](运维篇/监控系统/Grafana.md)
     - [InfluxDB](运维篇/监控系统/InfluxDB.md)
     - [Skywalking](运维篇/监控系统/Skywalking.md)
+    - [Sentry](运维篇/监控系统/Sentry.md)
 - [日志系统](运维篇/日志系统.md)
     - [Elasticsearch](运维篇/日志系统/Elasticsearch.md)
 - [诊断工具](运维篇/诊断工具.md)   
