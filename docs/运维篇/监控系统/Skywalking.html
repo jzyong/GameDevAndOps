@@ -138,6 +138,42 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="skywalking"><a class="header" href="#skywalking">Skywalking</a></h1>
+<p>  监控java 进程信息，elasticsearch apm 有类似功能，但是只支持到了jdk11。</p>
+<h2 id="安裝"><a class="header" href="#安裝">安裝</a></h2>
+<pre><code class="language-shell script"># 1.下载
+cd /data/
+wget https://archive.apache.org/dist/skywalking/8.7.0/apache-skywalking-apm-es7-8.7.0.tar.gz
+tar -xzvf apache-skywalking-apm-es7-8.7.0.tar.gzrm
+rm -rf apache-skywalking-apm-es7-8.7.0.tar.gz
+
+# 2.配置 数据存储为elasticsearch
+cd apache-skywalking-apm-bin-es7/config
+vim application.yml
+    storage:
+    selector: ${SW_STORAGE:elasticsearch7}
+    
+    elasticsearch7:
+      nameSpace: ${SW_NAMESPACE:&quot;&quot;}
+      clusterNodes: ${SW_STORAGE_ES_CLUSTER_NODES:127.0.0.1:9000}
+      
+  # 3.配置web查看端口
+  cd  apache-skywalking-apm-bin-es7/webapp
+  vim webapp.yml
+  
+      server:
+        port: 9001
+        
+  # 4.启动
+  cd apache-skywalking-apm-bin-es7/bin
+  ./startup.sh
+</code></pre>
+<h2 id="java-docker-agent-配置"><a class="header" href="#java-docker-agent-配置">Java docker agent 配置</a></h2>
+<p>参考：<a href="https://blog.csdn.net/gre_999/article/details/101726367">https://blog.csdn.net/gre_999/article/details/101726367</a></p>
+<p>见项目dockerfile文件和docker启动脚本</p>
+<h2 id="常见问题"><a class="header" href="#常见问题">常见问题</a></h2>
+<h3 id="1谷歌浏览器不显示仪表盘数据"><a class="header" href="#1谷歌浏览器不显示仪表盘数据">1.谷歌浏览器不显示仪表盘数据</a></h3>
+<pre><code>清除缓存，或者换个浏览器，使用Edge
+</code></pre>
 
                     </main>
 
@@ -165,22 +201,6 @@
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         <script type="text/javascript">
             window.playground_copyable = true;
         </script>
