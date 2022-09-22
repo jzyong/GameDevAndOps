@@ -138,6 +138,207 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="elasticsearch"><a class="header" href="#elasticsearch">Elasticsearch</a></h1>
+<p>  使用Elasticsearch进行集中日志查询管理；Linux主机，Docker，数据库等监控；应用程序性能，运行状态监控。</p>
+<h2 id="安装"><a class="header" href="#安装">安装</a></h2>
+<h3 id="1elasticsearch安装"><a class="header" href="#1elasticsearch安装">1.ElasticSearch安装</a></h3>
+<p>参考文档：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/docker.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/docker.html</a></p>
+<pre><code class="language-shell script"># 1.拉取镜像
+docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+
+# 2.创建数据挂载目录并授权
+cd /data
+mkdir elasticsearch
+chmod g+rwx elasticsearch
+chgrp 0 elasticsearch
+
+# 3.启动单个节点
+docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -v /data/elasticsearch:/usr/share/elasticsearch/data -e &quot;discovery.type=single-node&quot; docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+
+# 4.测试查看信息
+http://127.0.0.1:9200/_cat/nodes?v=true&amp;pretty
+</code></pre>
+<h3 id="2kibana安装"><a class="header" href="#2kibana安装">2.Kibana安装</a></h3>
+<p>  Web查询客户端。参考文档：<a href="https://www.elastic.co/guide/en/kibana/7.10/docker.html">https://www.elastic.co/guide/en/kibana/7.10/docker.html</a></p>
+<pre><code class="language-shell script"># 1.拉取镜像
+docker pull docker.elastic.co/kibana/kibana:7.10.2
+
+# 2.运行
+docker run -d --name kibana --link elasticsearch:elasticsearch -p 5601:5601 docker.elastic.co/kibana/kibana:7.10.2
+
+# 3.配置 
+docker ps -f name=kibana
+docker exec -it e431d5f8c92b /bin/sh
+cd config
+vi kibana.yml
+# 3.1中文显示 添加如下内容
+    i18n.locale: &quot;zh-CN&quot;
+
+# 4.访问地址：http://127.0.0.1:5601/     
+</code></pre>
+<h3 id="3filebeat安装"><a class="header" href="#3filebeat安装">3.Filebeat安装</a></h3>
+<p>  使用filebeat将本地日志文件传送到Elasticsearch数据库中。
+参考文档：<a href="https://www.elastic.co/guide/en/beats/filebeat/7.10/filebeat-installation-configuration.html">https://www.elastic.co/guide/en/beats/filebeat/7.10/filebeat-installation-configuration.html</a><br />
+配置文件参考：<a href="Elasticsearch/filebeat.yml">filebeat.yml</a></p>
+<pre><code class="language-shell script"># 1.下载运行包
+cd /data/elasticsearch
+curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.10.2-linux-x86_64.tar.gz
+tar xzvf filebeat-7.10.2-linux-x86_64.tar.gz
+
+# 2.连接elasticsearch
+cd filebeat-7.10.2-linux-x86_64
+vim filebeat.yml
+    output.elasticsearch:
+      hosts: [&quot;127.0.0.1:9200&quot;] 
+    setup.kibana:
+      host: &quot;127.0.0.1:5601&quot;
+    
+    - type: log
+      enabled: true
+      paths:
+        - /var/log/*.log
+        - /data/game/*/*.log
+
+# 3.查看|使用模块
+./filebeat modules list
+./filebeat modules enable system
+./filebeat setup -e
+
+# 4.启动
+sudo chown root filebeat.yml 
+sudo chown root modules.d/system.yml 
+nohup ./filebeat -e &gt;/dev/null  &amp;
+#必须exit退出一下，不然filebeat进程运行一段时间会退出
+exit
+</code></pre>
+<h3 id="4apm-server-安装"><a class="header" href="#4apm-server-安装">4.APM Server 安装</a></h3>
+<p>  监控应用程序，安装的<code>7.10</code>版本最大支持到Jdk11，可用Skywalking替代。<br />
+参考文档：<br />
+<a href="https://www.elastic.co/guide/en/apm/get-started/7.10/install-and-run.html">https://www.elastic.co/guide/en/apm/get-started/7.10/install-and-run.html</a><br />
+<a href="https://www.elastic.co/guide/en/apm/server/7.10/installing.html">https://www.elastic.co/guide/en/apm/server/7.10/installing.html</a><br />
+<a href="https://www.elastic.co/guide/en/apm/server/7.10/running-on-docker.html">https://www.elastic.co/guide/en/apm/server/7.10/running-on-docker.html</a><br />
+<a href="https://www.elastic.co/guide/en/apm/server/7.10/configuration-process.html">https://www.elastic.co/guide/en/apm/server/7.10/configuration-process.html</a><br />
+<a href="http://47.108.13.34:40014/app/home#/tutorial/apm">http://47.108.13.34:40014/app/home#/tutorial/apm</a><br />
+配置文件参考：hall/<a href="hall1/apm-server.yml">apm-server.yml</a></p>
+<pre><code class="language-shell script"># 1.下载并解压缩 APM Server
+curl -L -O https://artifacts.elastic.co/downloads/apm-server/apm-server-7.10.2-x86_64.rpm
+sudo rpm -vi apm-server-7.10.2-x86_64.rpm
+
+# 2.启动
+service apm-server start
+
+# 3.常用配置
+vim apm-server.yml 
+    apm-server:
+      host: &quot;0.0.0.0:8200
+    kibana:
+        enabled: true
+        host: &quot;127.0.0.1:5601&quot;
+    rum:
+        enabled: true
+        
+    output.elasticsearch:
+      hosts: [&quot;127.0.0.1:9200&quot;]
+</code></pre>
+<h3 id="5heartbeat-安装"><a class="header" href="#5heartbeat-安装">5.Heartbeat 安装</a></h3>
+<p>  监控引用程序是否在运行状态中，实际生产中使用较少。例如应用程序像InfluxDB写数据，结合Grafana来监控。
+参考文档：<a href="https://www.elastic.co/guide/en/observability/7.10/ingest-uptime.html">https://www.elastic.co/guide/en/observability/7.10/ingest-uptime.html</a><br />
+配置文件参考：<a href="Elasticsearch/heartbeat.yml">heartbeat.yml</a></p>
+<pre><code class="language-shell script"># 1.下载运行包
+cd /data/elasticsearch
+curl -L -O https://artifacts.elastic.co/downloads/beats/heartbeat/heartbeat-7.10.2-linux-x86_64.tar.gz
+tar xzvf heartbeat-7.10.2-linux-x86_64.tar.gz
+
+# 2.连接elasticsearch
+cd heartbeat-7.10.2-linux-x86_64
+vim heartbeat.yml
+    heartbeat.monitors:
+    - type: http
+      id: ElasticSearch
+      name: ElasticSearch
+      urls: [&quot;http://127.0.0.1:9200&quot;]
+      schedule: '@every 10s'
+    - type: tcp
+      id: GateClient1
+      name: GateClient1
+      schedule: '@every 5s'
+      hosts: [&quot;127.0.0.1:2012&quot;]
+      mode: any
+
+    output.elasticsearch:
+      hosts: [&quot;127.0.0.1:9200&quot;] 
+    setup.kibana:
+      host: &quot;127.0.0.1:5601&quot;
+
+# 3.查看|使用模块
+./heartbeat setup -e
+
+# 4.启动
+sudo chown root heartbeat.yml 
+nohup ./heartbeat -e &gt;/dev/null  &amp;
+#必须exit退出一下，不然heartbeat进程运行一段时间会退出
+exit
+
+# 5.配置http，tcp网络监控
+cd monitors.d
+cp sample.http.yml.disabled register.http.yml
+vim register.http.yml
+</code></pre>
+<h3 id="6metricbeat安装"><a class="header" href="#6metricbeat安装">6.Metricbeat安装</a></h3>
+<p>  监控linux服务器内存、CPU、网络、磁盘，MongoDB数据库，Docker等，可使用InfluxDB替代。
+参考文档：<a href="https://www.elastic.co/guide/en/beats/metricbeat/7.10/metricbeat-installation-configuration.html">https://www.elastic.co/guide/en/beats/metricbeat/7.10/metricbeat-installation-configuration.html</a></p>
+<pre><code class="language-shell script"># 1.下载运行包
+cd /data/elasticsearch
+mkdir metricbeat
+curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.10.2-linux-x86_64.tar.gz
+tar xzvf metricbeat-7.10.2-linux-x86_64.tar.gz
+
+# 2.连接elasticsearch
+cd metricbeat-7.10.2-linux-x86_64
+vim metricbeat.yml
+
+    output.elasticsearch:
+      hosts: [&quot;localhost:9200&quot;] 
+    setup.kibana:
+      host: &quot;localhost:5601&quot;
+ cd modules.d
+ #修改mongodb数据库连接地址用户名和密码
+ vim mongodb.yml 
+ 
+
+# 3.查看|使用模块（系统，docker，mongodb）
+./metricbeat modules list
+./metricbeat modules enable system mongodb docker
+./metricbeat setup -e
+
+# 4.启动
+sudo chown root metricbeat.yml 
+sudo chown root modules.d/system.yml 
+sudo chown root modules.d/docker.yml 
+sudo chown root modules.d/mongodb.yml 
+nohup ./metricbeat -e &gt;/dev/null  &amp;
+#必须exit退出一下，不然filebeat进程运行一段时间会退出
+exit
+</code></pre>
+<h2 id="查询"><a class="header" href="#查询">查询</a></h2>
+<h4 id="1查询匹配的日志内容"><a class="header" href="#1查询匹配的日志内容">1.查询匹配的日志内容</a></h4>
+<pre><code class="language-shell script">curl -X GET &quot;localhost:20011/filebeat-*/_search?pretty&quot; -H 'Content-Type: application/json' -d'
+{
+  &quot;query&quot;: {
+    &quot;match&quot;: {
+      &quot;message&quot;: &quot;国家&quot;
+    }
+  }
+}
+'
+</code></pre>
+<h4 id="2kibana查询"><a class="header" href="#2kibana查询">2.kibana查询</a></h4>
+<p>参考文档：<br />
+<a href="https://www.jianshu.com/p/9d511ea3a49d">https://www.jianshu.com/p/9d511ea3a49d</a><br />
+<a href="https://blog.csdn.net/jack1liu/article/details/102531714">https://blog.csdn.net/jack1liu/article/details/102531714</a></p>
+<ul>
+<li>全词查询<br />
+message:&quot;正常退出游戏&quot;</li>
+</ul>
 
                     </main>
 
