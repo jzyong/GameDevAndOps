@@ -138,46 +138,92 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="nginx"><a class="header" href="#nginx">Nginx</a></h1>
-<h3 id="10-nginx安装"><a class="header" href="#10-nginx安装">10. Nginx安装</a></h3>
-<p>安装参考：http://nginx.org/en/linux_packages.html
-配置路径：<code>/etc/nginx/</code>
-<a href="nginx/aws/%E6%AD%A3%E5%BC%8F%E6%9C%8Dnginx%E9%85%8D%E7%BD%AE.html">正式服配置</a></p>
-<pre><code>//安装前置软件
+<h2 id="安装"><a class="header" href="#安装">安装</a></h2>
+<p>安装参考：<a href="http://nginx.org/en/linux_packages.html">http://nginx.org/en/linux_packages.html</a>
+配置路径：<code>/etc/nginx/</code></p>
+<pre><code class="language-shell script"># 1.安装前置软件
 sudo yum install yum-utils
-
 vim /etc/yum.repos.d/nginx.repo
+    [nginx-stable]
+    name=nginx stable repo
+    baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+    gpgcheck=1
+    enabled=1
+    gpgkey=https://nginx.org/keys/nginx_signing.key
+    module_hotfixes=true
+    
+    [nginx-mainline]
+    name=nginx mainline repo
+    baseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/
+    gpgcheck=1
+    enabled=0
+    gpgkey=https://nginx.org/keys/nginx_signing.key
+    module_hotfixes=true
 
-[nginx-stable]
-name=nginx stable repo
-baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
-gpgcheck=1
-enabled=1
-gpgkey=https://nginx.org/keys/nginx_signing.key
-module_hotfixes=true
-
-[nginx-mainline]
-name=nginx mainline repo
-baseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/
-gpgcheck=1
-enabled=0
-gpgkey=https://nginx.org/keys/nginx_signing.key
-module_hotfixes=true
-
-# 安装
+# 2.安装
 sudo yum install nginx
 
-# 退出
+# 3.退出
 nginx -s quit
 service nginx stop
-# 启动
+# 4.启动
 nginx
 service nginx start
-# 重载配置
+# 5.重载配置
 nginx -s reload
 sudo systemctl reload nginx
-# 重启
+# 6.重启
 nginx -c /etc/nginx/nginx.conf
 </code></pre>
+<h2 id="配置"><a class="header" href="#配置">配置</a></h2>
+<h3 id="文件下载"><a class="header" href="#文件下载">文件下载</a></h3>
+<pre><code class="language-shell script"># 1.创建目录文件
+mkdir /data/download
+ 
+# 2.配置download.conf
+vim download.conf
+   server {
+       listen       8012;
+       listen  [::]:8012;
+       auth_basic           &quot;input password&quot;;
+       auth_basic_user_file /etc/nginx/conf.d/password;
+       location ^~ /download/ {
+          #需要下载的文件存放的目录
+           alias  /data/download/;
+           sendfile on;
+           autoindex on;  # 开启目录文件列表
+           autoindex_exact_size on;  # 显示出文件的确切大小，单位是bytes
+           autoindex_localtime on;  # 显示的文件时间为文件的服务器时间
+           charset utf-8,gbk;  # 避免中文乱码
+       }
+   }
+ 
+# 3.加载配置
+nginx -s reload
+</code></pre>
+<h2 id="常见问题"><a class="header" href="#常见问题">常见问题</a></h2>
+<ul>
+<li><strong>bind() to 0.0.0.0:XXXX failed (13: Permission denied)</strong></li>
+</ul>
+<pre><code># 1.查看http可访问端口
+semanage port -l | grep http_port_t
+# 2.设置http访问端口
+semanage port -a -t http_port_t  -p tcp 8090
+</code></pre>
+<p>参考：<a href="https://blog.csdn.net/cbmljs/article/details/88574122">https://blog.csdn.net/cbmljs/article/details/88574122</a></p>
+<p>代理和被代理端口都需要设置</p>
+<ul>
+<li>
+<p><strong>recv() failed (104: Connection reset by peer) while reading response header from upstream, client:</strong>
+game-manage 项目docker端口映射错误，导致不能访问</p>
+</li>
+<li>
+<p><strong>502 no live upstreams while connecting to upstream</strong>
+大厅报错，未正常返回数据，导致nginx连接耗尽<br />
+配置 <code>keepalive 256;</code> 共用长链接<br />
+参考：<a href="https://blog.csdn.net/donkeyboy001/article/details/119548514">https://blog.csdn.net/donkeyboy001/article/details/119548514</a></p>
+</li>
+</ul>
 
                     </main>
 
