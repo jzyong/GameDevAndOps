@@ -55,5 +55,5 @@
 - [诊断工具](运维篇/诊断工具.md)   
     - [Arthas](运维篇/诊断工具/Arthas.md)
 - [三方组件](运维篇/三方组件.md)
-    - [Nginx](运维篇/三方组件/Nginx.md)
+    - [Nginx](运维篇/三方组件/Nginx1.md)
     - [Zookeeper](运维篇/三方组件/Zookeeper.md)
