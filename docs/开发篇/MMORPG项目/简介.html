@@ -138,8 +138,20 @@
                 <div id="content" class="content">
                     <main>
                         <h2 id="简介"><a class="header" href="#简介">简介</a></h2>
-<p>  介绍一款修仙类MMORPG手游服务器实现，架构采用分区分服架构搭建，客户端采用Unity开发。服务开发技术主要是Java，单服务器线上实跑真实玩家2000+，机器人压测实跑5000+。</p>
+<p>  介绍一款修仙类MMORPG手游服务器实现，架构采用分区分服架构搭建。客户端采用Unity开发，服务开发技术主要是Java，单服务器线上实跑真实玩家2000+，机器人压测实跑5000+。</p>
 <h2 id="技术选型"><a class="header" href="#技术选型">技术选型</a></h2>
+<p>  服务器使用Java版本为Jdk8，未过多使用第三方组件，基本上是自己封装。
+数据库MongoDB存储玩家数据，MySQL存储策划配置文件，Redis存储排行榜及部分缓存数据。
+使用Git、Jenkins、Nexus搭建测试环境，持续集成，持续部署。
+Github类似开源服务器框架<a href="https://github.com/jzyong/game-server">GameServer</a>。</p>
+<ul>
+<li>编程：Java</li>
+<li>数据库：MongoDB、MySQL、Redis</li>
+<li>网络库：Netty、ProtoBuf</li>
+<li>项目构建：Maven</li>
+<li>开发工具：Git、Jenkins、Nexus</li>
+<li>生产环境：Centos</li>
+</ul>
 
                     </main>
 

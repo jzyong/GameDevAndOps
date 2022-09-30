@@ -177,14 +177,28 @@
 <li><a href="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/%E5%8E%8B%E6%B5%8B%E5%AE%A2%E6%88%B7%E7%AB%AF.html">压力测试</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="简介-1"><a class="header" href="#简介-1">简介</a></h2>
-<p>  介绍一款修仙类MMORPG手游服务器实现，架构采用分区分服架构搭建，客户端采用Unity开发。服务开发技术主要是Java，单服务器线上实跑真实玩家2000+，机器人压测实跑5000+。</p>
+<p>  介绍一款修仙类MMORPG手游服务器实现，架构采用分区分服架构搭建。客户端采用Unity开发，服务开发技术主要是Java，单服务器线上实跑真实玩家2000+，机器人压测实跑5000+。</p>
 <h2 id="技术选型"><a class="header" href="#技术选型">技术选型</a></h2>
+<p>  服务器使用Java版本为Jdk8，未过多使用第三方组件，基本上是自己封装。
+数据库MongoDB存储玩家数据，MySQL存储策划配置文件，Redis存储排行榜及部分缓存数据。
+使用Git、Jenkins、Nexus搭建测试环境，持续集成，持续部署。
+Github类似开源服务器框架<a href="https://github.com/jzyong/game-server">GameServer</a>。</p>
+<ul>
+<li>编程：Java</li>
+<li>数据库：MongoDB、MySQL、Redis</li>
+<li>网络库：Netty、ProtoBuf</li>
+<li>项目构建：Maven</li>
+<li>开发工具：Git、Jenkins、Nexus</li>
+<li>生产环境：Centos</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="架构"><a class="header" href="#架构">架构</a></h2>
+<p>TODO 架构图</p>
 <h3 id="登录服"><a class="header" href="#登录服">登录服</a></h3>
 <h3 id="网关服"><a class="header" href="#网关服">网关服</a></h3>
 <h3 id="游戏服"><a class="header" href="#游戏服">游戏服</a></h3>
 <h3 id="世界服"><a class="header" href="#世界服">世界服</a></h3>
 <h3 id="日志服"><a class="header" href="#日志服">日志服</a></h3>
+<h3 id="充值服"><a class="header" href="#充值服">充值服</a></h3>
 <div style="break-before: page; page-break-before: always;"></div><h3 id="线程模型"><a class="header" href="#线程模型">线程模型</a></h3>
 <h3 id="地图设计"><a class="header" href="#地图设计">地图设计</a></h3>
 <h3 id="视野管理"><a class="header" href="#视野管理">视野管理</a></h3>
