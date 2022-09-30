@@ -139,7 +139,7 @@
                     <main>
                         <h1 id="架构"><a class="header" href="#架构">架构</a></h1>
 <p>  服务器采用多进程进行架构，内部通信使用自定义TCP进行网络通信（Netty+Protobuf），后台管理系统调用查询使用HTTP协议。整体架构如下所示</p>
-<p>TODO 架构图</p>
+<p><img src="mmo_architecture.png" alt="服务器架构" /></p>
 <h3 id="登录服"><a class="header" href="#登录服">登录服</a></h3>
 <p>  登录服可水平扩展，兼容了类似zookeeper的服务发现功能，游戏服、网关服启动时会向所有的登录服进行注册，同时可管理他们的运行状态。
 主要功能如下：</p>
@@ -178,7 +178,6 @@ APP使用返回的地址向网关进行TCP连接，然后进行登录校验，�
 <pre><code class="language-shell script">消息长度[4]+消息ID[4]+玩家ID[8]+Protobuf字节流
 </code></pre>
 <h3 id="游戏服"><a class="header" href="#游戏服">游戏服</a></h3>
-<h3 id="世界服"><a class="header" href="#世界服">世界服</a></h3>
 <h3 id="日志服"><a class="header" href="#日志服">日志服</a></h3>
 <h3 id="充值服"><a class="header" href="#充值服">充值服</a></h3>
 
