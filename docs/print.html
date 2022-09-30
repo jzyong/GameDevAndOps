@@ -191,10 +191,46 @@ Github类似开源服务器框架<a href="https://github.com/jzyong/game-server"
 <li>开发工具：Git、Jenkins、Nexus</li>
 <li>生产环境：Centos</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="架构"><a class="header" href="#架构">架构</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="架构"><a class="header" href="#架构">架构</a></h1>
+<p>  服务器采用多进程进行架构，内部通信使用自定义TCP进行网络通信（Netty+Protobuf），后台管理系统调用查询使用HTTP协议。整体架构如下所示</p>
 <p>TODO 架构图</p>
 <h3 id="登录服"><a class="header" href="#登录服">登录服</a></h3>
-<h3 id="网关服"><a class="header" href="#网关服">网关服</a></h3>
+<p>  登录服可水平扩展，兼容了类似zookeeper的服务发现功能，游戏服、网关服启动时会向所有的登录服进行注册，同时可管理他们的运行状态。
+主要功能如下：</p>
+<ul>
+<li>登录校验</li>
+<li>获取游戏服务器列表</li>
+<li>获取网关列表</li>
+<li>网关服、游戏服状态管理</li>
+</ul>
+<p>TODO 登录流程图</p>
+<p>  玩家首次打开游戏APP通过通过HTTP请求网关列表，登录服返回空闲的网关地址；
+APP使用返回的地址向网关进行TCP连接，然后进行登录校验，获取游戏大区列表，玩家选择登录游戏逻辑服。</p>
+<h2 id="网关服"><a class="header" href="#网关服">网关服</a></h2>
+<p>  网关服也是水平扩展的，连接登陆服、游戏逻辑服、世界服，负责各自消息的转发，主要功能如下：</p>
+<ul>
+<li>网络消息的转发</li>
+<li>管理玩家连接会话</li>
+<li>消息合并</li>
+<li>数据加解密</li>
+<li>数据压缩、解压缩</li>
+<li>玩家通信频率限制，IP黑名单处理</li>
+</ul>
+<p>  玩家登录选择游戏服后，会在网关绑定玩家登录的游戏服连接会话，以后所有消息都转发到对应该游戏服。
+网络消息转发通过为每个消息定义一个消息ID进行转发。如果消息ID是注册在游戏逻辑服，就将相应的消息转发给游戏逻辑服。</p>
+<p>  消息合并是将游戏逻辑服同一时间同一玩家的多条返回消息合并成一个消息转发给客户端，减少网络延迟，丢包重发等。
+消息合并不超过MTU，且必须设置超时时间。数据加解密使用对称加密算法RC4，创建Socket时服务器返回一个密钥字符串。
+数据压缩使用Snappy进行压缩，且只对消息长度超过MTU的部分数据进行压缩。
+通信频率限制，IP黑名单主要是针对非法玩家使用加速器的请求，篡改协议等做出相应的限制。</p>
+<h3 id="协议定义"><a class="header" href="#协议定义">协议定义</a></h3>
+<h4 id="用户到网关"><a class="header" href="#用户到网关">用户到网关</a></h4>
+<p>  用户到网关的协议格式如下，其中消息长度第30位标识是否加密，29位标识是否压缩，后二十位表示真正的消息长度。</p>
+<pre><code>消息长度[4]+消息ID[4]+Protobuf字节流
+</code></pre>
+<h4 id="网关和内部进程"><a class="header" href="#网关和内部进程">网关和内部进程</a></h4>
+<p>  网关到内部进程服务协议增加了玩家ID，需要知道每条消息归属于那个玩家。</p>
+<pre><code class="language-shell script">消息长度[4]+消息ID[4]+玩家ID[8]+Protobuf字节流
+</code></pre>
 <h3 id="游戏服"><a class="header" href="#游戏服">游戏服</a></h3>
 <h3 id="世界服"><a class="header" href="#世界服">世界服</a></h3>
 <h3 id="日志服"><a class="header" href="#日志服">日志服</a></h3>
