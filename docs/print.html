@@ -192,9 +192,9 @@ Github类似开源服务器框架<a href="https://github.com/jzyong/game-server"
 <li>生产环境：Centos</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="架构"><a class="header" href="#架构">架构</a></h1>
-<p>  服务器采用多进程进行架构，内部通信使用自定义TCP进行网络通信（Netty+Protobuf），后台管理系统调用查询使用HTTP协议。整体架构如下所示</p>
-<p><img src="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/mmo_architecture.png" alt="服务器架构" /></p>
-<h3 id="登录服"><a class="header" href="#登录服">登录服</a></h3>
+<p>  服务器采用多进程进行架构，客户端到网关、内部通信使用自定义TCP进行网络通信（Netty+Protobuf），后台管理系统调用查询使用HTTP协议。整体架构如下所示</p>
+<p><img src="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/img/mmo_architecture.png" alt="服务器架构" /></p>
+<h2 id="登录服"><a class="header" href="#登录服">登录服</a></h2>
 <p>  登录服可水平扩展，兼容了类似zookeeper的服务发现功能，游戏服、网关服启动时会向所有的登录服进行注册，同时可管理他们的运行状态。
 主要功能如下：</p>
 <ul>
@@ -203,9 +203,9 @@ Github类似开源服务器框架<a href="https://github.com/jzyong/game-server"
 <li>获取网关列表</li>
 <li>网关服、游戏服状态管理</li>
 </ul>
-<p>TODO 登录流程图</p>
 <p>  玩家首次打开游戏APP通过通过HTTP请求网关列表，登录服返回空闲的网关地址；
-APP使用返回的地址向网关进行TCP连接，然后进行登录校验，获取游戏大区列表，玩家选择登录游戏逻辑服。</p>
+APP使用返回的地址向网关进行TCP连接，然后进行登录校验，获取游戏大区列表，玩家选择登录游戏逻辑服。后续所有客户端请求TCP消息都通过网关服转发，时序图如下所示：<br />
+<img src="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/img/mmo_login.png" alt="登录流程图" /></p>
 <h2 id="网关服"><a class="header" href="#网关服">网关服</a></h2>
 <p>  网关服也是水平扩展的，连接登陆服、游戏逻辑服、世界服，负责各自消息的转发，主要功能如下：</p>
 <ul>
@@ -231,27 +231,42 @@ APP使用返回的地址向网关进行TCP连接，然后进行登录校验，�
 <p>  网关到内部进程服务协议增加了玩家ID，需要知道每条消息归属于那个玩家。</p>
 <pre><code class="language-shell script">消息长度[4]+消息ID[4]+玩家ID[8]+Protobuf字节流
 </code></pre>
-<h3 id="游戏服"><a class="header" href="#游戏服">游戏服</a></h3>
-<h3 id="日志服"><a class="header" href="#日志服">日志服</a></h3>
-<h3 id="充值服"><a class="header" href="#充值服">充值服</a></h3>
-<div style="break-before: page; page-break-before: always;"></div><h3 id="线程模型"><a class="header" href="#线程模型">线程模型</a></h3>
-<h3 id="地图设计"><a class="header" href="#地图设计">地图设计</a></h3>
-<h3 id="视野管理"><a class="header" href="#视野管理">视野管理</a></h3>
+<h2 id="游戏服"><a class="header" href="#游戏服">游戏服</a></h2>
+<p>  一个游戏服是一个独立的游戏世界，玩家所有游戏操作相关的逻辑都在游戏服进行处理。多个游戏地图场景在一个游戏服中使用多线程处理，没有按照地图进行创建进程。
+核心功能模块参考<a href="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97.html">下一节</a>，主要功能模块有：</p>
+<ul>
+<li>武器、宠物、镶嵌、法宝、成就、称号、境界、坐骑、翅膀、时装等养成系统</li>
+<li>公会、好友、组队、邮件、聊天、师徒、结婚等社交系统</li>
+<li>背包、仓库、商城、交易、摆摊等系统</li>
+<li>野外场景、战场、副本等系统</li>
+<li>AI、寻路、技能、Buff等系统</li>
+<li>活动系统</li>
+</ul>
+<h2 id="日志服"><a class="header" href="#日志服">日志服</a></h2>
+<p>  日志服也是水平扩展的，游戏服在多个可用日志服中随机选择一个进行日志传送。
+日志服主要功能是将所有收到的消息批量写入MySQL数据库，供后台系统进行处理。</p>
+<h2 id="充值服"><a class="header" href="#充值服">充值服</a></h2>
+<p>  充值服也是水平扩展的，主要是功能是验证第三方充值的合法性。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="核心模块"><a class="header" href="#核心模块">核心模块</a></h1>
+<h2 id="线程模型"><a class="header" href="#线程模型">线程模型</a></h2>
+<h2 id="地图设计"><a class="header" href="#地图设计">地图设计</a></h2>
+<h2 id="视野管理"><a class="header" href="#视野管理">视野管理</a></h2>
 <pre><code>    九宫格
 </code></pre>
-<h3 id="npc-ai"><a class="header" href="#npc-ai">NPC AI</a></h3>
-<h3 id="npc-寻路"><a class="header" href="#npc-寻路">NPC 寻路</a></h3>
-<h3 id="断线重连"><a class="header" href="#断线重连">断线重连</a></h3>
-<h3 id="属性设计"><a class="header" href="#属性设计">属性设计</a></h3>
-<h3 id="热更新"><a class="header" href="#热更新">热更新</a></h3>
-<h3 id="排队系统"><a class="header" href="#排队系统">排队系统</a></h3>
+<h2 id="npc-ai"><a class="header" href="#npc-ai">NPC AI</a></h2>
+<h2 id="npc-寻路"><a class="header" href="#npc-寻路">NPC 寻路</a></h2>
+<h2 id="断线重连"><a class="header" href="#断线重连">断线重连</a></h2>
+<h2 id="属性设计"><a class="header" href="#属性设计">属性设计</a></h2>
+<h2 id="热更新"><a class="header" href="#热更新">热更新</a></h2>
+<h2 id="排队系统"><a class="header" href="#排队系统">排队系统</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="压力测试"><a class="header" href="#压力测试">压力测试</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><p>水电费</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="简介-2"><a class="header" href="#简介-2">简介</a></h1>
 <h2 id="技术选型-1"><a class="header" href="#技术选型-1">技术选型</a></h2>
 <h2 id="项目规范"><a class="header" href="#项目规范">项目规范</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="服务器架构"><a class="header" href="#服务器架构">服务器架构</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="核心模块"><a class="header" href="#核心模块">核心模块</a></h1>
+<p><img src="%E5%BC%80%E5%8F%91%E7%AF%87/Slots%E9%A1%B9%E7%9B%AE/slots_architecture.png" alt="架构图" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="核心模块-1"><a class="header" href="#核心模块-1">核心模块</a></h1>
 <h2 id="googleapple充值"><a class="header" href="#googleapple充值">Google、Apple充值</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="压测客户端"><a class="header" href="#压测客户端">压测客户端</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="slots数值分析工具"><a class="header" href="#slots数值分析工具">Slots数值分析工具</a></h1>
