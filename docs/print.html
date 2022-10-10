@@ -281,6 +281,11 @@ guildScene.register(sceneLoop);
 全局所有玩家操作的对象如公会，聊天，组队等都单独创建一个独立的队列，所有玩家该功能模块的操作都丢人该队列中执行；
 野外场景，副本的创建也单独创建一个队列，在同一场景、副本的玩家操作在同一队列中执行。</p>
 <h2 id="热更新"><a class="header" href="#热更新">热更新</a></h2>
+<p>  热更新使用Java自带的<code>JavaCompiler</code>将源文件编译成class文件，然后使用<code>ClassLoader</code>将class文件加载到内存中，
+源码及示例可参考<a href="https://github.com/jzyong/GameServer4j">GameServer4j</a> 。
+此方法优点是使用java原生代码，开发简单方便;缺点是只能更新部分逻辑，如数据存储实体类不能进行热更新，逻辑必须实现接口。
+大致流程如下：</p>
+<p><img src="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/img/mmo_script.png" alt="Script update flow" /></p>
 <h2 id="地图设计"><a class="header" href="#地图设计">地图设计</a></h2>
 <h2 id="视野管理"><a class="header" href="#视野管理">视野管理</a></h2>
 <pre><code>    九宫格
