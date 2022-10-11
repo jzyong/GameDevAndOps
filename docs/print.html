@@ -252,12 +252,8 @@ APP使用返回的地址向网关进行TCP连接，然后进行登录校验，�
 <ul>
 <li>线程模型</li>
 <li>热更新</li>
-<li>地图设计</li>
-<li>视野管理</li>
-<li>NPC AI、寻路</li>
-<li>断线重连</li>
+<li>地图战斗</li>
 <li>属性设计</li>
-<li>排队系统</li>
 </ul>
 <h2 id="线程模型"><a class="header" href="#线程模型">线程模型</a></h2>
 <p>  因为服务器采用的是多进程多线程模型，因此线程模型未设计好，经常会出现各种bug和性能问题。
@@ -286,14 +282,26 @@ guildScene.register(sceneLoop);
 此方法优点是使用java原生代码，开发简单方便;缺点是只能更新部分逻辑，如数据存储实体类不能进行热更新，逻辑必须实现接口。
 大致流程如下：</p>
 <p><img src="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/img/mmo_script.png" alt="Script update flow" /></p>
-<h2 id="地图设计"><a class="header" href="#地图设计">地图设计</a></h2>
-<h2 id="视野管理"><a class="header" href="#视野管理">视野管理</a></h2>
-<pre><code>    九宫格
-</code></pre>
-<h2 id="npc-ai寻路"><a class="header" href="#npc-ai寻路">NPC AI、寻路</a></h2>
-<h2 id="断线重连"><a class="header" href="#断线重连">断线重连</a></h2>
+<h2 id="地图战斗"><a class="header" href="#地图战斗">地图战斗</a></h2>
+<h3 id="地图设计"><a class="header" href="#地图设计">地图设计</a></h3>
+<ol>
+<li>地图分为野外地图、副本、战场、公会地图等，其中野外地图又按人数分多线。</li>
+<li>每个地图都绑定一个消息队列，同一地图的玩家操作，战斗都在同一线程执行。</li>
+<li>每个地图都有定时器进行AI、技能的定时计算。</li>
+<li>地图划分主要有两种，一种是为了进行视野同步（九宫格）将地图分成大小相同的多个矩形格子，
+另一种是四叉树划分行走面的凸多边形（快速查询地图对象所在行走面的凸多边形）。
+<img src="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/img/mmo_map.png" alt="Map divide" /></li>
+</ol>
+<h3 id="技能设计"><a class="header" href="#技能设计">技能设计</a></h3>
+<p>  技能、AI目标筛选也只针对九宫格中的对象进行寻找，方式分为矩形，圆形，扇形等。
+矩形目标筛选通过玩家朝向构建一个矩形，然后判断周围的对象是否在矩形中；圆形直接判断周围对象的距离；扇形构建多个三角形，判断周围对象是否在三角形中。
+<img src="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/img/mmo_skill_target.png" alt="Skill target" /></p>
+<h3 id="ai寻路"><a class="header" href="#ai寻路">AI、寻路</a></h3>
+<ul>
+<li>AI 使用<a href="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/../%E6%B8%B8%E6%88%8FAI/%E7%8A%B6%E6%80%81%E6%9C%BA.html">状态机</a>和<a href="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/../%E6%B8%B8%E6%88%8FAI/%E8%A1%8C%E4%B8%BA%E6%A0%91.html">行为树</a></li>
+<li>寻路使用<a href="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/../%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9F/A%E6%98%9F%E7%AE%97%E6%B3%95.html">A*</a>和<a href="%E5%BC%80%E5%8F%91%E7%AF%87/MMORPG%E9%A1%B9%E7%9B%AE/../%E5%AF%BB%E8%B7%AF%E7%B3%BB%E7%BB%9F/NavMesh%E7%BD%91%E6%A0%BC.html">NavMesh</a></li>
+</ul>
 <h2 id="属性设计"><a class="header" href="#属性设计">属性设计</a></h2>
-<h2 id="排队系统"><a class="header" href="#排队系统">排队系统</a></h2>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="压力测试"><a class="header" href="#压力测试">压力测试</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><p>水电费</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="简介-2"><a class="header" href="#简介-2">简介</a></h1>
