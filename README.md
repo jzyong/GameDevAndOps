@@ -27,4 +27,4 @@ mdbook build
 
 
 #### TODO
-MMORPG项目
+Slots项目
