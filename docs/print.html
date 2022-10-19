@@ -452,18 +452,79 @@ slots服只编写游戏逻辑，公共处理逻辑调用大厅rpc。</p>
 具体更新流程如下：</p>
 <p><img src="%E5%BC%80%E5%8F%91%E7%AF%87/Slots%E9%A1%B9%E7%9B%AE/img/slots_product_cd_flow.png" alt="测试更新流程" /></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="压力测试-1"><a class="header" href="#压力测试-1">压力测试</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><p>水电费</p>
+<p>  因测试环境没有足够的主机，只压测到最高同时在线6000人，两个网关服、两个大厅服、两个API服、两个Manage服和若干子游戏服。
+<a href="%E5%BC%80%E5%8F%91%E7%AF%87/Slots%E9%A1%B9%E7%9B%AE/../%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/Http%E5%8E%8B%E6%B5%8B.html">HTTP后台</a>使用Locust测试，最高并发2000QPS；
+游戏因为使用TCP自定义协议，因此用Go自行写了<a href="%E5%BC%80%E5%8F%91%E7%AF%87/Slots%E9%A1%B9%E7%9B%AE/../%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/Tcp%E5%8E%8B%E6%B5%8B.html">压测集群</a>，模拟客户端发送消息，最高5000QPS。</p>
+<h2 id="测试目的-1"><a class="header" href="#测试目的-1">测试目的</a></h2>
+<ul>
+<li>模拟真实玩家行为，发现服务器高并发下的问题</li>
+<li>测试服务器的承载压力</li>
+<li>分析优化网络，消息包</li>
+<li>测试各个功能模块</li>
+</ul>
+<h2 id="实现技术-1"><a class="header" href="#实现技术-1">实现技术</a></h2>
+<ul>
+<li><strong>Go</strong>：开发压测集群</li>
+<li><strong>Unity</strong>：开发压测客户端工具</li>
+<li><strong>Locust</strong>：Python实现的HTTP压测工具</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="游戏ai"><a class="header" href="#游戏ai">游戏AI</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="状态机"><a class="header" href="#状态机">状态机</a></h1>
+<h4 id="todo"><a class="header" href="#todo">TODO</a></h4>
+<ul>
+<li>原理</li>
+<li>优缺点，考虑因素</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="行为树"><a class="header" href="#行为树">行为树</a></h1>
+<h4 id="todo-1"><a class="header" href="#todo-1">TODO</a></h4>
+<ul>
+<li>脚本对行为树的组装</li>
+<li>xml行为树配置</li>
+<li>节点类型介绍</li>
+<li>原理</li>
+<li>优缺点，考虑因素</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="寻路系统"><a class="header" href="#寻路系统">寻路系统</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="a算法"><a class="header" href="#a算法">A*算法</a></h1>
+<h4 id=""><a class="header" href="#"></a></h4>
+<ul>
+<li>libgdx-ai</li>
+<li>原理</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="navmesh网格"><a class="header" href="#navmesh网格">NavMesh网格</a></h1>
-<p>TODO 四叉树</p>
+<h4 id="todo-2"><a class="header" href="#todo-2">TODO</a></h4>
+<ul>
+<li>四叉树</li>
+<li>Unity导出NavMesh</li>
+<li>UnityNavMesh的问题</li>
+<li>数据组织方式</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="服务器寻路图形工具"><a class="header" href="#服务器寻路图形工具">服务器寻路图形工具</a></h1>
+<h4 id="-1"><a class="header" href="#-1"></a></h4>
+<ul>
+<li>Java 2d图形显示工具</li>
+<li>libgdx 3d 图形显示工具</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="excel导表"><a class="header" href="#excel导表">Excel导表</a></h1>
+<h4 id="todo-3"><a class="header" href="#todo-3">TODO</a></h4>
+<ul>
+<li>MongoDB excel导表技术实现，规范</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="压力测试-2"><a class="header" href="#压力测试-2">压力测试</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="http压测"><a class="header" href="#http压测">Http压测</a></h1>
+<h4 id="todo-4"><a class="header" href="#todo-4">TODO</a></h4>
+<ul>
+<li>Locust 实现压测</li>
+<li>Locust+Docker 搭建压测集群</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tcp压测"><a class="header" href="#tcp压测">Tcp压测</a></h1>
+<h4 id="todo-5"><a class="header" href="#todo-5">TODO</a></h4>
+<ul>
+<li>压测集群架构图，实现原理</li>
+<li>统计信息类型，</li>
+<li>Unity工具开发使用的技术，原理，lua过滤器</li>
+<li>Docker部署搭建压测集群</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="linux"><a class="header" href="#linux">Linux</a></h1>
 <p>  本章节主要记录基于CentosOS 7常用指令；
 开发和生产环境中Linux的常用软件安装维护；
@@ -1186,7 +1247,7 @@ https://www.jianshu.com/p/993ffb82ee0e</p>
 <p>  进入 <code>E:\Program Files\Jenkins</code> 在jenkins.xml中设置启动参数 <code> -Dfile.encoding=UTF-8</code></p>
 <p>TODO 结合docker进行流程介绍 </p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="数据库"><a class="header" href="#数据库">数据库</a></h1>
-<h3 id="todo"><a class="header" href="#todo">TODO</a></h3>
+<h3 id="todo-6"><a class="header" href="#todo-6">TODO</a></h3>
 <ul>
 <li>AWS DocumentDB</li>
 <li>AWS MemoryDB</li>
@@ -1844,7 +1905,7 @@ exit
 message:&quot;正常退出游戏&quot;</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="监控系统"><a class="header" href="#监控系统">监控系统</a></h1>
-<h3 id="todo-1"><a class="header" href="#todo-1">TODO：</a></h3>
+<h3 id="todo-7"><a class="header" href="#todo-7">TODO：</a></h3>
 <ul>
 <li>Sentry异常日志</li>
 </ul>

@@ -138,6 +138,22 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="压力测试"><a class="header" href="#压力测试">压力测试</a></h1>
+<p>  因测试环境没有足够的主机，只压测到最高同时在线6000人，两个网关服、两个大厅服、两个API服、两个Manage服和若干子游戏服。
+<a href="../%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/Http%E5%8E%8B%E6%B5%8B.html">HTTP后台</a>使用Locust测试，最高并发2000QPS；
+游戏因为使用TCP自定义协议，因此用Go自行写了<a href="../%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/Tcp%E5%8E%8B%E6%B5%8B.html">压测集群</a>，模拟客户端发送消息，最高5000QPS。</p>
+<h2 id="测试目的"><a class="header" href="#测试目的">测试目的</a></h2>
+<ul>
+<li>模拟真实玩家行为，发现服务器高并发下的问题</li>
+<li>测试服务器的承载压力</li>
+<li>分析优化网络，消息包</li>
+<li>测试各个功能模块</li>
+</ul>
+<h2 id="实现技术"><a class="header" href="#实现技术">实现技术</a></h2>
+<ul>
+<li><strong>Go</strong>：开发压测集群</li>
+<li><strong>Unity</strong>：开发压测客户端工具</li>
+<li><strong>Locust</strong>：Python实现的HTTP压测工具</li>
+</ul>
 
                     </main>
 
