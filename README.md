@@ -27,4 +27,4 @@ mdbook build
 
 
 #### TODO
-Slots项目
+* 人工智能
