@@ -536,19 +536,19 @@ Unity NavMesh导出工具参考<a href="https://github.com/jzyong/NavMeshDemo">N
 <p>  行为树实现相对较复杂的Boss AI，行为树管理相对较复杂AI更直观，但是性能消耗较多，每次需要从根节点循环检测。
 在实际开发中采用了两种技术组装行为树：脚本和xml配置。脚本方便程序员组装，可热更新；xml可策划进行编辑。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="excel导表"><a class="header" href="#excel导表">Excel导表</a></h1>
-<h4 id="todo"><a class="header" href="#todo">TODO</a></h4>
-<ul>
-<li>MongoDB excel导表技术实现，规范</li>
-</ul>
+<p>  策划配置的Excel数值在游戏服启动时一般是需要加载到内存中，加速配置文件的读取。
+因此在开发中一般都有自己的一套规则，工具，我们实现的方式是将excel读取写入到MongoDB数据库中，服务器启动从数据库中加载缓存到内存中。
+参考项目<a href="https://github.com/jzyong/game-server/tree/master/game-tool">game-server/game-tool</a>,
+<a href="https://github.com/jzyong/game-server/wiki/%E5%AF%BC%E8%A1%A8%E5%B7%A5%E5%85%B7">格式设计</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="压力测试-2"><a class="header" href="#压力测试-2">压力测试</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="http压测"><a class="header" href="#http压测">Http压测</a></h1>
-<h4 id="todo-1"><a class="header" href="#todo-1">TODO</a></h4>
+<h4 id="todo"><a class="header" href="#todo">TODO</a></h4>
 <ul>
 <li>Locust 实现压测</li>
 <li>Locust+Docker 搭建压测集群</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tcp压测"><a class="header" href="#tcp压测">Tcp压测</a></h1>
-<h4 id="todo-2"><a class="header" href="#todo-2">TODO</a></h4>
+<h4 id="todo-1"><a class="header" href="#todo-1">TODO</a></h4>
 <ul>
 <li>压测集群架构图，实现原理</li>
 <li>统计信息类型，</li>
@@ -1277,7 +1277,7 @@ https://www.jianshu.com/p/993ffb82ee0e</p>
 <p>  进入 <code>E:\Program Files\Jenkins</code> 在jenkins.xml中设置启动参数 <code> -Dfile.encoding=UTF-8</code></p>
 <p>TODO 结合docker进行流程介绍 </p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="数据库"><a class="header" href="#数据库">数据库</a></h1>
-<h3 id="todo-3"><a class="header" href="#todo-3">TODO</a></h3>
+<h3 id="todo-2"><a class="header" href="#todo-2">TODO</a></h3>
 <ul>
 <li>AWS DocumentDB</li>
 <li>AWS MemoryDB</li>
@@ -1935,7 +1935,7 @@ exit
 message:&quot;正常退出游戏&quot;</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="监控系统"><a class="header" href="#监控系统">监控系统</a></h1>
-<h3 id="todo-4"><a class="header" href="#todo-4">TODO：</a></h3>
+<h3 id="todo-3"><a class="header" href="#todo-3">TODO：</a></h3>
 <ul>
 <li>Sentry异常日志</li>
 </ul>
