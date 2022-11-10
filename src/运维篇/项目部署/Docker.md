@@ -2,7 +2,7 @@
 &emsp;&emsp;因为slots类游戏有上百个子游戏，每个子游戏都是单独的服务，如果使用传统的服务器部署一整套或更新将是恶魔般的存在，因此用docker搭建了一套自动化部署流程。
 
 ## 部署流程
-TODO 画流程图，结合jenkins
+![部署流程图](../../开发篇/Slots项目/img/slots_product_cd_flow.png)
 
 
 ## 环境搭建
