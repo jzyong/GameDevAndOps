@@ -21,9 +21,9 @@ nps stop
 # 2.进入网页后台进行配置，创建用户，TCP隧道
 
 # 3.Windows 连接服务器
-npc.exe -server=127.0.0.1:8024 -vkey=7fx8smcst1cp0rw3 -type=tcp
+npc.exe -server=127.0.0.1:8024 -vkey=123456 -type=tcp
 # 3.1注册服务，运行，停止
-npc.exe install -server=127.0.0.1:8024 -vkey=7fx8smcst1cp0rw3 -type=tcp
+npc.exe install -server=127.0.0.1:8024 -vkey=123456 -type=tcp
 npc.exe start
 npc.exe stop
 
